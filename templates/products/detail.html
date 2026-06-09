@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} — Магазин Рыбок{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- 🔹 ХЛЕБНЫЕ КРОШКИ -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'pages:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:catalog' %}">Каталог</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- 🔹 ИЗОБРАЖЕНИЕ -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 400px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 400px;">
+                        <i class="bi bi-box text-white" style="font-size: 6rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 🔹 ИНФОРМАЦИЯ О ТОВАРЕ -->
+        <div class="col-lg-6">
+            <div class="d-flex flex-column h-100">
+                <!-- Категория -->
+                <div class="mb-2">
+                    {% if product.category == 'fish' %}
+                        <span class="badge bg-info text-dark fs-6"><i class="bi bi-fish"></i> Рыбки</span>
+                    {% elif product.category == 'aquarium' %}
+                        <span class="badge bg-primary fs-6"><i class="bi bi-display"></i> Аквариумы</span>
+                    {% elif product.category == 'accessory' %}
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-tools"></i> Аксессуары</span>
+                    {% elif product.category == 'food' %}
+                        <span class="badge bg-success fs-6"><i class="bi bi-cup"></i> Корма</span>
+                    {% endif %}
+                    {% if product.difficulty and product.category == 'fish' %}
+                        <span class="badge bg-light text-dark ms-1 fs-6">{{ product.get_difficulty_display }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Название и цена -->
+                <h1 class="display-6 fw-bold mb-2">{{ product.name }}</h1>
+                <h2 class="text-danger fw-bold mb-3">{{ product.price }} ₽</h2>
+
+                <!-- Наличие -->
+                <div class="mb-3">
+                    {% if product.stock > 0 %}
+                        <span class="badge bg-success fs-6"><i class="bi bi-check-circle"></i> В наличии: {{ product.stock }} шт.</span>
+                    {% else %}
+                        <span class="badge bg-danger fs-6"><i class="bi bi-x-circle"></i> Нет в наличии</span>
+                    {% endif %}
+                </div>
+
+                <!-- Краткое описание -->
+                <p class="text-muted mb-4">{{ product.description }}</p>
+
+                <!-- Характеристики (для рыбок) -->
+                {% if product.category == 'fish' and product.min_volume %}
+                <div class="card bg-light border-0 mb-4">
+                    <div class="card-body py-3">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-info-circle"></i> Характеристики</h6>
+                        <ul class="list-unstyled mb-0 small">
+                            <li><i class="bi bi-droplet text-info me-2"></i>Мин. объём аквариума: <strong>{{ product.min_volume }} л</strong></li>
+                            <li><i class="bi bi-star text-warning me-2"></i>Сложность: <strong>{{ product.get_difficulty_display }}</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Кнопки покупки -->
+                <div class="mt-auto">
+                    {% if user.is_authenticated %}
+                        {% if product.stock > 0 %}
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <button class="btn btn-outline-secondary btn-lg" onclick="changeQty({{ product.id }}, -1, {{ product.stock }})">−</button>
+                                <input type="number" id="qty-{{ product.id }}" class="form-control form-control-lg text-center" value="1" min="1" max="{{ product.stock }}" style="width: 70px;">
+                                <button class="btn btn-outline-secondary btn-lg" onclick="changeQty({{ product.id }}, 1, {{ product.stock }})">+</button>
+                            </div>
+                            <button class="btn btn-primary btn-lg w-100" onclick="addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.stock }})">
+                                <i class="bi bi-cart-plus"></i> В корзину
+                            </button>
+                        {% else %}
+                            <button class="btn btn-secondary btn-lg w-100" disabled>
+                                <i class="bi bi-x-circle"></i> Нет в наличии
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-secondary btn-lg w-100">
+                            <i class="bi bi-lock"></i> Войдите, чтобы купить
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 ПОЛНОЕ ОПИСАНИЕ -->
+    {% if product.full_description %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-journal-text"></i> Подробное описание</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ product.full_description|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 🔹 КНОПКА НАЗАД -->
+    <div class="text-center mt-4">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Вернуться в каталог
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Изменение количества с учётом остатка
+function changeQty(productId, delta, maxStock) {
+    const input = document.getElementById(`qty-${productId}`);
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    if (val > maxStock) val = maxStock;
+    input.value = val;
+}
+
+// Добавление в корзину с валидацией и обновлением интерфейса
+function addToCart(productId, productName, maxStock) {
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    let qty = parseInt(qtyInput.value) || 1;
+    if (qty > maxStock) qty = maxStock;
+    if (qty < 1) qty = 1;
+
+    fetch(`/orders/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({ quantity: qty })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // 🔹 Обновляем бейдж корзины глобально
+            if (window.updateCartBadge) {
+                window.updateCartBadge(data.total_items);
+            }
+            // 🔹 Сбрасываем количество
+            qtyInput.value = 1;
+            // 🔹 Показываем остаток
+            const remaining = data.remaining_stock;
+            if (remaining !== undefined) {
+                alert(`✅ "${productName}" (×${qty}) добавлен!\n📦 Осталось на складе: ${remaining} шт.`);
+            } else {
+                alert(`✅ "${productName}" (×${qty}) добавлен в корзину!`);
+            }
+        } else {
+            alert('❌ ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ошибка при добавлении в корзину');
+    });
+}
+
+// Получение CSRF токена
+function getCSRFToken() {
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

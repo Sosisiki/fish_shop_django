@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Доставка{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="text-center mb-4 fw-bold text-primary"><i class="bi bi-truck"></i> Условия доставки</h1>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex align-items-start"><i class="bi bi-clock text-primary me-3"></i><div><strong>Сроки:</strong> Доставка осуществляется в день заказа или на следующий рабочий день.</div></li>
+                    <li class="list-group-item d-flex align-items-start"><i class="bi bi-geo-alt text-primary me-3"></i><div><strong>Зона покрытия:</strong> Москва и МО, Санкт-Петербург, крупные города РФ.</div></li>
+                    <li class="list-group-item d-flex align-items-start"><i class="bi bi-box-seam text-primary me-3"></i><div><strong>Упаковка:</strong> Специализированные пакеты с кислородом, термоизоляция, защитные контейнеры.</div></li>
+                    <li class="list-group-item d-flex align-items-start"><i class="bi bi-shield-check text-primary me-3"></i><div><strong>Гарантия:</strong> Если рыбка не пережила транспортировку по нашей вине — бесплатная замена или возврат.</div></li>
+                </ul>
+                <div class="alert alert-warning mt-3 mb-0"><i class="bi bi-info-circle-fill"></i> При получении обязательно проверяйте целостность упаковки и температуру воды в пакете.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

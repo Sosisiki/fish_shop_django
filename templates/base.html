@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}🐠 Магазин Рыбок{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    
+    <!-- Навигация -->
+    <nav class="site-navbar">
+        <div class="nav-wrapper container">
+            <div class="nav-group nav-left">
+                <a href="{% url 'products:catalog' %}" class="nav-item"><i class="bi bi-grid"></i> Каталог</a>
+                <a href="{% url 'pages:about' %}" class="nav-item"><i class="bi bi-info-circle"></i> О нас</a>
+                <a href="{% url 'pages:support' %}" class="nav-item"><i class="bi bi-headset"></i> Поддержка</a>
+            </div>
+            <a href="{% url 'pages:home' %}" class="nav-brand"><i class="bi bi-fish-fill"></i> Магазин Рыбок</a>
+            <div class="nav-group nav-right">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'orders:order_history' %}" class="nav-item"><i class="bi bi-bag"></i> Заказы</a>
+                    <a href="{% url 'orders:cart' %}" class="nav-item position-relative">
+                        <i class="bi bi-cart"></i> Корзина
+                        <span id="cartBadge" class="badge-count" style="display:none;">0</span>
+                    </a>
+                    {% if user.is_staff %}<a href="/admin/" class="nav-item"><i class="bi bi-gear"></i> Админка</a>{% endif %}
+                    <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-item btn-logout"><i class="bi bi-box-arrow-right"></i> Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="nav-item"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
+                    <a href="{% url 'accounts:register' %}" class="nav-item"><i class="bi bi-person-plus"></i> Регистрация</a>
+                {% endif %}
+            </div>
+            <div class="nav-fishing-rod" aria-hidden="true">
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5,55 Q25,5 50,15" stroke="#0ea5e9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <line x1="50" y1="15" x2="46" y2="42" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,2"/>
+                    <circle cx="46" cy="44" r="3" fill="#06b6d4" opacity="0.8"/>
+                </svg>
+            </div>
+            <button class="mobile-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu"><i class="bi bi-list"></i></button>
+        </div>
+        <div class="collapse mobile-menu" id="mobileMenu">
+            <div class="container py-3">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'orders:cart' %}" class="nav-item d-block mb-2"><i class="bi bi-cart"></i> Корзина</a>
+                    <a href="{% url 'orders:order_history' %}" class="nav-item d-block mb-2"><i class="bi bi-bag"></i> Мои заказы</a>
+                    {% if user.is_staff %}<a href="/admin/" class="nav-item d-block mb-2"><i class="bi bi-gear"></i> Админка</a>{% endif %}
+                    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit" class="nav-item btn-logout w-100 text-start"><i class="bi bi-box-arrow-right"></i> Выйти</button></form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="nav-item d-block mb-2"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
+                    <a href="{% url 'accounts:register' %}" class="nav-item d-block mb-2"><i class="bi bi-person-plus"></i> Регистрация</a>
+                {% endif %}
+                <a href="{% url 'products:catalog' %}" class="nav-item d-block"><i class="bi bi-grid"></i> Каталог</a>
+                <a href="{% url 'pages:about' %}" class="nav-item d-block"><i class="bi bi-info-circle"></i> О нас</a>
+                <a href="{% url 'pages:support' %}" class="nav-item d-block"><i class="bi bi-headset"></i> Поддержка</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Сообщения -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="site-footer">
+        <div class="footer-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="wave-path"></path>
+            </svg>
+        </div>
+        <div class="container py-4">
+            <div class="text-center mb-3">
+                <a href="{% url 'pages:home' %}" class="footer-home-link"><i class="bi bi-house-heart-fill"></i><span>Магазин Рыбок</span></a>
+            </div>
+            <div class="row justify-content-between align-items-center">
+                <div class="col-md-4 text-md-start mb-3 mb-md-0">
+                    <div class="footer-links-group">
+                        <a href="{% url 'products:catalog' %}" class="footer-link"><i class="bi bi-grid"></i> Каталог</a>
+                        <a href="{% url 'pages:about' %}" class="footer-link"><i class="bi bi-info-circle"></i> О нас</a>
+                        <a href="{% url 'pages:support' %}" class="footer-link"><i class="bi bi-headset"></i> Поддержка</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mb-3 mb-md-0">
+                    <div class="footer-links-group">
+                        <a href="{% url 'pages:delivery' %}" class="footer-link"><i class="bi bi-truck"></i> Доставка</a>
+                        <a href="{% url 'pages:returns' %}" class="footer-link"><i class="bi bi-arrow-return-left"></i> Возврат</a>
+                        <a href="{% url 'pages:guarantee' %}" class="footer-link"><i class="bi bi-shield-check"></i> Гарантия</a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3 pt-3 border-top border-light">
+                <div class="footer-social mb-2">
+                    <a href="#" class="footer-social-icon" title="VK"><i class="bi bi-vk"></i></a>
+                    <a href="#" class="footer-social-icon" title="Email"><i class="bi bi-envelope"></i></a>
+                    <a href="#" class="footer-social-icon" title="YouTube"><i class="bi bi-youtube"></i></a>
+                </div>
+                <p class="mb-0 text-light opacity-75 small">🐠 Магазин Рыбок | Дипломный проект 2026</p>
+            </div>
+        </div>
+        <div class="footer-fish fish-1">🐠</div>
+        <div class="footer-fish fish-2">🐟</div>
+        <div class="footer-fish fish-3">🐡</div>
+    </footer>
+
+    <!-- Кнопка наверх -->
+    <button id="backToTop" title="Вернуться наверх" class="btn-floating"><i class="bi bi-chevron-up"></i></button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+    {% include 'includes/chat_widget.html' %}
+</body>
+</html>

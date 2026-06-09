@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Гарантия{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="text-center mb-4 fw-bold text-primary"><i class="bi bi-shield-check"></i> Гарантия качества</h1>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 bg-light">
+                            <div class="card-body text-center">
+                                <i class="bi bi-heart-pulse fs-1 text-danger mb-2"></i>
+                                <h5 class="fw-bold">Здоровье рыбок</h5>
+                                <p class="text-muted small">Все обитатели проходят карантин и ветеринарный осмотр перед отправкой.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 bg-light">
+                            <div class="card-body text-center">
+                                <i class="bi bi-thermometer-half fs-1 text-warning mb-2"></i>
+                                <h5 class="fw-bold">Температурный режим</h5>
+                                <p class="text-muted small">Поддержание оптимальной температуры при транспортировке и хранении.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>Мы гарантируем точное соответствие товара описанию в каталоге. В случае расхождения — полная замена без лишних вопросов.</p>
+                <div class="alert alert-success mt-3 mb-0"><i class="bi bi-check-circle-fill"></i> Ваша безопасность и спокойствие — наш приоритет.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

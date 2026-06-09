@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Подтверждение телефона{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-warning text-dark text-center py-3">
+                <h4 class="mb-0 fw-bold">🔐 Подтвердите телефон</h4>
+                <small class="opacity-75">{{ phone }}</small>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Важно:</strong> Подтверждение телефона обязательно для доступа к сайту.
+                </div>
+                
+                <!-- Кнопка повторной отправки кода -->
+                <form method="POST" action="{% url 'accounts:resend_code' %}" class="mb-4">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        📤 Отправить код повторно
+                    </button>
+                </form>
+                
+                <!-- Форма ввода кода -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        {{ form.code.label_tag }}
+                        {{ form.code }}
+                        {% if form.code.errors %}
+                            <div class="text-danger small mt-1">{{ form.code.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
+                        Подтвердить и войти
+                    </button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <small class="text-muted">
+                        Код действителен 5 минут.<br>
+                        Не получили код? Проверьте номер или запросите новый.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

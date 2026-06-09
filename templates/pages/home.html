@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}🐠 Магазин Рыбок – Главная{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="text-center py-5 bg-light rounded-4 mb-5 shadow-sm">
+    <div class="container">
+        <h1 class="display-4 fw-bold text-primary mb-3">Создайте свой подводный мир</h1>
+        <p class="lead text-muted mb-4 mx-auto" style="max-width: 700px;">
+            Первый российский интернет-магазин аквариумных рыбок с интеграцией ИИ-консультанта. 
+            Подбор совместимых видов, расчёт объёма аквариума и оформление заказа в один клик.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'products:catalog' %}" class="btn btn-primary btn-lg px-4 shadow">
+                <i class="bi bi-grid me-2"></i> Перейти в каталог
+            </a>
+            <a href="{% url 'pages:about' %}" class="btn btn-outline-primary btn-lg px-4">
+                <i class="bi bi-info-circle me-2"></i> Как это работает
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="text-center mb-3"><i class="bi bi-robot fs-1 text-primary"></i></div>
+            <h5 class="fw-bold">ИИ-консультант 24/7</h5>
+            <p class="text-muted">Нейросеть обучена ихтиологии и аквариумистике. Отвечает на вопросы, подбирает совместимые виды и оформляет заказы прямо в чате.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="text-center mb-3"><i class="bi bi-shield-check fs-1 text-success"></i></div>
+            <h5 class="fw-bold">Безопасная покупка</h5>
+            <p class="text-muted">Обязательная верификация по телефону, прозрачные условия возврата, фиксация согласия с офертой и гарантия сохранности при доставке.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="text-center mb-3"><i class="bi bi-geo-alt fs-1 text-info"></i></div>
+            <h5 class="fw-bold">Умная доставка</h5>
+            <p class="text-muted">Интерактивная карта для выбора адреса, автоматическое геокодирование и расчёт оптимального маршрута в день заказа.</p>
+        </div>
+    </div>
+</div>
+
+<!-- AI CTA -->
+<section class="card border-0 shadow-sm mb-5 bg-gradient" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+    <div class="card-body p-5 text-white text-center">
+        <h3 class="fw-bold mb-3">Попробуйте ИИ-консультанта</h3>
+        <p class="mb-4 opacity-75">Напишите в чат «Подбери рыбок для 50 литров» и получите мгновенную рекомендацию с учётом совместимости и сложности ухода.</p>
+        <div class="d-inline-block bg-white text-dark rounded-pill px-4 py-2 fw-medium">
+            <i class="bi bi-chat-dots me-2"></i> Виджет доступен в правом нижнем углу ↘️
+        </div>
+    </div>
+</section>
+
+<!-- Trust -->
+<div class="row text-center g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">50+</h2>
+        <small class="text-muted">Видов в каталоге</small>
+    </div>
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">24/7</h2>
+        <small class="text-muted">Работа ИИ</small>
+    </div>
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">100%</h2>
+        <small class="text-muted">Безопасные транзакции</small>
+    </div>
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">🇷🇺</h2>
+        <small class="text-muted">Российская разработка</small>
+    </div>
+</div>
+{% endblock %}

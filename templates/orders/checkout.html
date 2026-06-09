@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <h2 class="page-title"><i class="bi bi-credit-card"></i> Оформление заказа</h2>
+
+    <!-- Товары в заказе -->
+    <div class="content-section">
+        <h4><i class="bi bi-bag"></i> Товары в заказе</h4>
+        {% for item in items %}
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div>
+                <strong>{{ item.product.name }}</strong>
+                <span class="text-muted">× {{ item.quantity }}</span>
+            </div>
+            <span class="fw-bold">{{ item.total_price }} ₽</span>
+        </div>
+        {% empty %}
+        <p class="text-muted">Корзина пуста</p>
+        {% endfor %}
+        <div class="d-flex justify-content-between mt-3 pt-2 border-top">
+            <span class="fs-5 fw-bold">Итого:</span>
+            <span class="fs-4 text-danger fw-bold">{{ total }} ₽</span>
+        </div>
+    </div>
+
+    <!-- Адрес доставки -->
+    <div class="content-section">
+        <h4><i class="bi bi-geo-alt"></i> Адрес доставки</h4>
+        <form id="deliveryForm">
+            <div class="mb-3">
+                <label for="deliveryAddress" class="form-label">Адрес *</label>
+                <input type="text" class="form-control" id="deliveryAddress" 
+                       placeholder="г. Москва, ул. Примерная, д. 1, кв. 1" required>
+                <input type="hidden" id="deliveryCoords" name="coords">
+            </div>
+            
+            <!-- Яндекс.Карта -->
+            <div id="mapContainer" class="mb-3">
+                <div id="yandexMap" style="width: 100%; height: 300px; border-radius: 8px; background: #f0f2f5; position: relative;"></div>
+                <small class="text-muted d-block mt-2">
+                    <i class="bi bi-info-circle"></i> Нажмите на карту, чтобы уточнить адрес
+                </small>
+            </div>
+            
+            <!-- Фоллбэк: если карта не загрузилась -->
+            <div id="mapFallback" class="alert alert-warning" style="display: none;">
+                <i class="bi bi-exclamation-triangle"></i> 
+                Карта не загрузилась. Введите адрес вручную.
+            </div>
+            
+            <div class="mb-0">
+                <label for="deliveryComment" class="form-label">Комментарий курьеру</label>
+                <textarea class="form-control" id="deliveryComment" rows="2" 
+                          placeholder="Домофон, этаж, ориентир..."></textarea>
+            </div>
+        </form>
+    </div>
+
+    <!-- Способ оплаты -->
+    <div class="content-section">
+        <h4><i class="bi bi-wallet2"></i> Оплата при получении</h4>
+        <form id="paymentForm">
+            {% csrf_token %}
+            <div class="alert alert-info mb-3">
+                <i class="bi bi-info-circle"></i> Вы оплачиваете заказ курьеру при получении
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Выберите способ оплаты</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" 
+                           value="cash" id="payCash" checked>
+                    <label class="form-check-label" for="payCash">
+                        <i class="bi bi-cash"></i> Наличные курьеру
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" 
+                           value="card" id="payCard">
+                    <label class="form-check-label" for="payCard">
+                        <i class="bi bi-credit-card"></i> Карта курьеру
+                    </label>
+                </div>
+            </div>
+            
+            <div class="alert alert-success mb-0">
+                <i class="bi bi-shield-check"></i> <strong>Гарантия безопасности:</strong> оплата только после проверки товара
+            </div>
+        </form>
+    </div>
+
+    <!-- Итого и оформление -->
+    <div class="content-section text-center">
+        <div class="form-check mb-3 text-start">
+            <input class="form-check-input" type="checkbox" id="agreeCheck" required>
+            <label class="form-check-label" for="agreeCheck" style="font-size: 0.9rem;">
+                Я принимаю условия <a href="#" target="_blank">публичной оферты</a>
+            </label>
+        </div>
+        
+        <button class="btn btn-success w-100 btn-lg" onclick="processCheckout()">
+            <i class="bi bi-check-circle"></i> Оформить заказ на {{ total }} ₽
+        </button>
+        
+        <a href="{% url 'orders:cart' %}" class="btn btn-link w-100 mt-2">
+            ← Вернуться в корзину
+        </a>
+        
+        <div id="checkoutLoading" class="text-center py-3 mt-3" style="display: none;">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 mb-0">Обработка заказа...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-shield-check"></i> Подтверждение заказа</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-3">✅ Заказ будет оформлен</p>
+                <p class="text-muted small">Оплата при получении курьеру</p>
+                <p class="small mt-2" id="paymentMethodText"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success w-100" id="confirmPaymentBtn">
+                    Подтвердить заказ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- 🔹 ПОДКЛЮЧЕНИЕ API ЯНДЕКС.КАРТ -->
+<script src="https://api-maps.yandex.ru/2.1/?apikey={{ settings.YANDEX_MAPS_API_KEY|default:'' }}&lang=ru_RU" type="text/javascript"></script>
+
+<script>
+let paymentModal;
+let yandexMap = null;
+let placemark = null;
+let mapInitialized = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    
+    // Инициализация карты только после загрузки API
+    if (typeof ymaps !== 'undefined') {
+        ymaps.ready(initYandexMap);
+    } else {
+        // Если API не загрузился — показываем фоллбэк
+        showMapFallback();
+    }
+});
+
+function initYandexMap() {
+    if (mapInitialized) return;
+    
+    const mapContainer = document.getElementById('yandexMap');
+    const fallback = document.getElementById('mapFallback');
+    
+    try {
+        // 🔹 Создаём карту с правильными параметрами
+        yandexMap = new ymaps.Map('yandexMap', {
+            center: [55.751244, 37.618423], // Москва
+            zoom: 10,
+            controls: ['zoomControl', 'geolocationControl', 'fullscreenControl']
+        });
+        
+        // 🔹 Добавляем обработчик клика
+        yandexMap.events.add('click', function(e) {
+            const coords = e.get('coords');
+            
+            // Удаляем старый маркер
+            if (placemark) {
+                yandexMap.geoObjects.remove(placemark);
+            }
+            
+            // Добавляем новый маркер
+            placemark = new ymaps.Placemark(coords, {
+                hintContent: 'Адрес доставки',
+                balloonContent: 'Вы выбрали этот адрес'
+            }, {
+                preset: 'islands#redCircleDotIcon'
+            });
+            yandexMap.geoObjects.add(placemark);
+            
+            // 🔹 Обратное геокодирование: координаты → адрес
+            ymaps.geocode(coords, {
+                results: 1,
+                kind: 'house',
+                rsp: 'N'
+            }).then(function(res) {
+                const firstGeoObject = res.geoObjects.get(0);
+                if (firstGeoObject) {
+                    // 🔹 Вставляем адрес в поле
+                    const address = firstGeoObject.getAddressLine();
+                    document.getElementById('deliveryAddress').value = address;
+                    document.getElementById('deliveryCoords').value = coords.join(',');
+                    
+                    // 🔹 Визуальная подсветка поля
+                    const addressInput = document.getElementById('deliveryAddress');
+                    addressInput.classList.add('is-valid');
+                    setTimeout(() => addressInput.classList.remove('is-valid'), 2000);
+                }
+            }).catch(function(err) {
+                console.warn('⚠️ Геокодирование не удалось:', err);
+                // Если геокодирование не удалось — сохраняем только координаты
+                document.getElementById('deliveryCoords').value = coords.join(',');
+                alert('⚠️ Не удалось определить точный адрес. Введите его вручную.');
+            });
+        });
+        
+        mapInitialized = true;
+        
+    } catch (error) {
+        console.error('❌ Ошибка инициализации карты:', error);
+        showMapFallback();
+    }
+}
+
+// 🔹 Фоллбэк: показать сообщение об ошибке карты
+function showMapFallback() {
+    const mapContainer = document.getElementById('mapContainer');
+    const fallback = document.getElementById('mapFallback');
+    
+    if (mapContainer) {
+        mapContainer.style.display = 'none';
+    }
+    if (fallback) {
+        fallback.style.display = 'block';
+    }
+    document.getElementById('deliveryAddress').focus();
+}
+
+function processCheckout() {
+    if (!document.getElementById('deliveryAddress').value.trim()) {
+        alert('❌ Укажите адрес доставки');
+        document.getElementById('deliveryAddress').focus();
+        return;
+    }
+    if (!document.getElementById('agreeCheck').checked) {
+        alert('❌ Примите условия оферты');
+        return;
+    }
+    
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    const paymentText = paymentMethod === 'cash' ? 'Наличными курьеру' : 'Картой курьеру';
+    document.getElementById('paymentMethodText').textContent = 'Способ оплаты: ' + paymentText;
+    
+    paymentModal.show();
+}
+
+document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Обработка...';
+    
+    const paymentData = {
+        address: document.getElementById('deliveryAddress').value,
+        coords: document.getElementById('deliveryCoords').value || null,
+        comment: document.getElementById('deliveryComment').value,
+        payment_method: document.querySelector('input[name="payment_method"]:checked').value,
+        agreement_accepted: true
+    };
+    
+    fetch('{% url "orders:create_order" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(paymentData)
+    })
+    .then(r => r.json())
+    .then(data => {
+        paymentModal.hide();
+        if (data.success) {
+            alert('✅ ' + data.message);
+            window.location.href = '{% url "orders:order_history" %}';
+        } else {
+            alert('❌ ' + data.message);
+            btn.disabled = false;
+            btn.innerHTML = 'Подтвердить заказ';
+        }
+    })
+    .catch(() => {
+        alert('Ошибка при оформлении заказа');
+        paymentModal.hide();
+        btn.disabled = false;
+        btn.innerHTML = 'Подтвердить заказ';
+    });
+});
+</script>
+
+<!-- 🔹 CSS для корректного отображения карты -->
+<style>
+#yandexMap {
+    width: 100% !important;
+    height: 300px !important;
+    border-radius: 8px;
+    background: #f0f2f5;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+}
+#yandexMap .ymaps-2-1-79-map {
+    border-radius: 8px !important;
+}
+#deliveryAddress.is-valid {
+    border-color: #198754 !important;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25) !important;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-cart"></i> Ваша корзина</h1>
+
+{% if items %}
+<div class="row">
+    <div class="col-lg-8">
+        {% for item in items %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                             class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-box text-white fs-4"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">{{ item.product.name }}</h5>
+                        <p class="text-muted small mb-2">{{ item.product.description|truncatechars:80 }}</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="fw-bold text-danger">{{ item.price }} ₽</span>
+                            <span class="text-muted small">
+                                {% if item.product.stock > 0 %}
+                                    На складе: {{ item.product.stock }} шт.
+                                {% else %}
+                                    <span class="text-danger">Нет в наличии</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-end">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <button class="btn btn-sm btn-outline-secondary" 
+                                    onclick="updateCartQty({{ item.product.id }}, -1, {{ item.product.stock }})">−</button>
+                            <input type="number" id="cart-qty-{{ item.product.id }}" 
+                                   class="form-control form-control-sm text-center" 
+                                   value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" 
+                                   style="width: 50px;" 
+                                   onchange="updateCartQty({{ item.product.id }}, this.value, {{ item.product.stock }})">
+                            <button class="btn btn-sm btn-outline-secondary" 
+                                    onclick="updateCartQty({{ item.product.id }}, 1, {{ item.product.stock }})">+</button>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger" 
+                                onclick="removeFromCart({{ item.product.id }})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm sticky-top" style="top: 20px;">
+            <div class="card-body">
+                <h5 class="card-title">Итого</h5>
+                <hr>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Товаров: {{ total_items }}</span>
+                    <span class="fw-bold">{{ total }} ₽</span>
+                </div>
+                <a href="{% url 'orders:checkout' %}" class="btn btn-success w-100 btn-lg">
+                    <i class="bi bi-check-circle"></i> Оформить заказ
+                </a>
+                <a href="{% url 'products:catalog' %}" class="btn btn-link w-100 mt-2">
+                    ← Продолжить покупки
+                </a>
+                <button class="btn btn-outline-secondary w-100 mt-2" onclick="clearCart()">
+                    <i class="bi bi-trash"></i> Очистить корзину
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info text-center py-5">
+    <i class="bi bi-cart-x fs-1 d-block mb-3"></i>
+    <h5>Корзина пуста</h5>
+    <p class="text-muted">Добавьте товары из каталога</p>
+    <a href="{% url 'products:catalog' %}" class="btn btn-primary">
+        <i class="bi bi-grid"></i> Перейти в каталог
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Обновление количества в корзине с валидацией
+function updateCartQty(productId, delta, maxStock) {
+    const input = document.getElementById(`cart-qty-${productId}`);
+    let qty = typeof delta === 'number' ? parseInt(input.value) + delta : parseInt(delta);
+    
+    if (qty < 1) qty = 1;
+    if (qty > maxStock) {
+        alert(`❌ Доступно только ${maxStock} шт.`);
+        qty = maxStock;
+    }
+    input.value = qty;
+    
+    fetch(`/orders/cart/update/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ quantity: qty })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            if (window.updateCartBadge) {
+                window.updateCartBadge(data.total_items);
+            }
+            location.reload(); // Обновляем страницу для актуальных остатков
+        } else {
+            alert(data.message);
+            input.value = Math.min(parseInt(input.value), maxStock);
+        }
+    })
+    .catch(() => alert('Ошибка при обновлении'));
+}
+
+// Удаление из корзины
+function removeFromCart(productId) {
+    if (!confirm('Удалить товар из корзины?')) return;
+    
+    fetch(`/orders/cart/remove/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            if (window.updateCartBadge) {
+                window.updateCartBadge(data.total_items);
+            }
+            location.reload();
+        }
+    });
+}
+
+// Очистка корзины
+function clearCart() {
+    if (!confirm('Очистить всю корзину?')) return;
+    window.location.href = '{% url "orders:cart_clear" %}';
+}
+
+// CSRF token helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

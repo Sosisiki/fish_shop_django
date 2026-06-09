@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Подтверждение кода{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white text-center py-3">
+                <h4 class="mb-0 fw-bold">🔢 Введите код</h4>
+                <small class="opacity-75">Мы отправили 6-значный код на ваш номер</small>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        {{ form.code.label_tag }}
+                        {{ form.code }}
+                        {% if form.code.errors %}
+                            <div class="text-danger small mt-1">{{ form.code.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 py-2 fs-5 fw-bold">
+                        Подтвердить
+                    </button>
+                </form>
+                <hr class="my-4">
+                <div class="text-center">
+                    <a href="{% url 'accounts:phone_auth' %}" class="text-decoration-none">
+                        Изменить номер телефона
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

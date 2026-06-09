@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}История заказов{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-bag"></i> Мои заказы</h1>
+
+{% if orders %}
+    <div class="list-group">
+        {% for order in orders %}
+        <!-- ✅ ИСПРАВЛЕНО: добавлено orders: перед order_detail -->
+        <a href="{% url 'orders:order_detail' order.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Заказ #{{ order.id }}</h5>
+                <small>{{ order.created_at|date:"d.m.Y H:i" }}</small>
+            </div>
+            <p class="mb-1">
+                {% for item in order.items.all %}
+                    {{ item.product.name }} × {{ item.quantity }}
+                {% endfor %}
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+                <strong>{{ order.total_amount }} ₽</strong>
+                <span class="badge bg-{% if order.status == 'PAID' %}success{% elif order.status == 'PENDING' %}warning{% else %}danger{% endif %}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> У вас пока нет заказов.
+    </div>
+{% endif %}
+{% endblock %}

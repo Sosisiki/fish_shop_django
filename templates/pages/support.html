@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Поддержка{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <h2 class="page-title"><i class="bi bi-headset"></i> Поддержка и FAQ</h2>
+
+    <div class="content-section">
+        <h4><i class="bi bi-envelope"></i> Связаться с нами</h4>
+        <div class="contact-grid">
+            <div class="contact-item">
+                <i class="bi bi-telephone"></i>
+                <div><strong>+7 (911) 996-39-39</strong><br><small>Пн-Вс: 10:00–20:00</small></div>
+            </div>
+            <div class="contact-item">
+                <i class="bi bi-envelope"></i>
+                <div><strong>support@roboto.pro</strong><br><small>Ответ в течение 2 часов</small></div>
+            </div>
+            <div class="contact-item">
+                <i class="bi bi-chat-dots"></i>
+                <div><strong>Чат на сайте</strong><br><small>ИИ + операторы 24/7</small></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h4><i class="bi bi-question-circle"></i> Популярные вопросы</h4>
+        
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        🐠 Можно ли смешивать хищных и мирных рыбок?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Нет. Хищники (пираньи, арованы, крупные цихлиды) будут воспринимать мелких мирных рыбок как корм. Используйте фильтры в каталоге и спрашивайте ИИ-консультанта перед покупкой.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        💧 Как запустить аквариум без гибели рыб?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Запустите пустой аквариум за 7–10 дней. Включите фильтр, добавьте кондиционер и немного корма для запуска азотного цикла. Заселяйте рыб только после стабилизации параметров воды.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        📦 Гарантируете ли вы сохранность при доставке?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Да. Рыбки доставляются в герметичных пакетах с кислородом и термоупаковке. При повреждении упаковки по нашей вине — бесплатная замена или возврат средств.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        🤖 Может ли ИИ ошибиться в подборе?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        ИИ обучен на проверенной ихтиологической базе и не генерирует несуществующие факты. Для сложных ветеринарных случаев рекомендуем профильного специалиста, но для подбора совместимости ИИ даёт точные рекомендации.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                        🔄 Как оформить возврат средств?
+                    </button>
+                </h2>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        В личном кабинете перейдите в историю заказов, выберите оплаченный заказ и нажмите «Запросить возврат». Средства вернутся в течение 3 рабочих дней на исходный метод оплаты.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                        🐟 Какой минимальный объём для первой рыбки?
+                    </button>
+                </h2>
+                <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Для неприхотливых видов (гуппи, неоны, коридорасы) оптимален объём от 20–30 литров. Меньшие ёмкости сложнее в поддержании стабильного биобаланса.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                        💳 Почему оплата тестовая?
+                    </button>
+                </h2>
+                <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Сейчас используется демо-режим шлюза. Реальные списания не производятся. Для перехода в продакшен достаточно подключить реальный API ЮMoney/СБП в настройках проекта.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
