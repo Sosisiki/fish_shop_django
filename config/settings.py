@@ -150,7 +150,7 @@ YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY', '')
 # ПРОДАКШЕН-НАСТРОЙКИ (для Beget)
 # ============================================
 DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Обязательно False!
-ALLOWED_HOSTS = ['x95142ym.beget.tech', 'www.x95142ym.beget.tech', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['fish-shop-django.onrender.com', 'localhost', '127.0.0.1']
 
 # Статика и медиа для продакшена
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -162,7 +162,9 @@ MEDIA_URL = '/media/'
 # CSRF_TRUSTED_ORIGINS: обязательно для работы форм и AJAX на HTTPS-доменах
 CSRF_TRUSTED_ORIGINS_RAW = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://*.onrender.com')
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS_RAW.split(',') if origin.strip()]
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://fish-shop-django.onrender.com',
+]
 # Безопасность
 CSRF_TRUSTED_ORIGINS = ['http://x95142ym.beget.tech/']
 SECURE_SSL_REDIRECT = False  # Beget сам редиректит
