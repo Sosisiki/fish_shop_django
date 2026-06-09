@@ -163,3 +163,13 @@ CSRF_TRUSTED_ORIGINS = ['http://x95142ym.beget.tech/']
 SECURE_SSL_REDIRECT = False  # Beget сам редиректит
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+# Для Render.com
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+}
+
+# Static files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

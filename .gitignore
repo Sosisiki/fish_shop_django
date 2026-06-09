@@ -32,3 +32,6 @@ collected_static/
 # OS
 .DS_Store
 Thumbs.db
+
+# Render
+.web/
