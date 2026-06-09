@@ -3,9 +3,13 @@ services:
     name: fish-shop-django
     env: python
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
-    startCommand: "gunicorn config.wsgi:application"
+    startCommand: "gunicorn config.wsgi:application --timeout 120 --workers 2 --threads 2"
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
-        value: False
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "fish-shop-django.onrender.com,localhost,127.0.0.1"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://fish-shop-django.onrender.com"
