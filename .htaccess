@@ -1,0 +1,12 @@
+# Перенаправление на WSGI
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(static/.*)$ - [L]
+RewriteRule ^(media/.*)$ - [L]
+RewriteRule ^(.*)$ config/wsgi.py/$1 [QSA,PT,L]
+
+# Защита .env
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
