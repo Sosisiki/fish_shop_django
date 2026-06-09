@@ -53,7 +53,7 @@ def send_verification_email(email, code, purpose='register'):
                 html_message=html_message,
                 fail_silently=False,
                 # 🔹 Таймаут SMTP-соединения (берём из settings или используем 10 сек)
-                timeout=getattr(settings, 'EMAIL_TIMEOUT', 10),
+                
             )
             
             logger.info(f"✅ Email с кодом {code} успешно отправлен на {email} (цель: {purpose})")
