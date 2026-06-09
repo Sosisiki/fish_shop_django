@@ -159,6 +159,10 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
+# CSRF_TRUSTED_ORIGINS: обязательно для работы форм и AJAX на HTTPS-доменах
+CSRF_TRUSTED_ORIGINS_RAW = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://*.onrender.com')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS_RAW.split(',') if origin.strip()]
+
 # Безопасность
 CSRF_TRUSTED_ORIGINS = ['http://x95142ym.beget.tech/']
 SECURE_SSL_REDIRECT = False  # Beget сам редиректит
