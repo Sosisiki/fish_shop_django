@@ -112,7 +112,7 @@ YOOMONEY_TEST_MODE = os.getenv('YOOMONEY_TEST_MODE', 'True') == 'True'
 # N8N
 N8N_WEBHOOK_URL = os.getenv(
     'N8N_WEBHOOK_URL', 
-    'https://ridozororoo.beget.app/webhook/751260db-047d-42c3-a8a5-e6f6fd7da5ff/chat'
+    'https://piebodalunuef.beget.app/webhook/751260db-047d-42c3-a8a5-e6f6fd7da5ff/chat'
 )
 N8N_TIMEOUT = int(os.getenv('N8N_TIMEOUT', '30'))
 
