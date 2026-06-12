@@ -116,17 +116,25 @@ N8N_WEBHOOK_URL = os.getenv(
 )
 N8N_TIMEOUT = int(os.getenv('N8N_TIMEOUT', '30'))
 
-# EMAIL
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+# EMAIL НА СЛУЧАЙ НОРМАЛЬНОГО ХОСТА
+# EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+# EMAIL_HOST = os.getenv('EMAIL_HOST')
+# EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+# EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
+# EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+# EMAIL_SUBJECT_PREFIX = '[Магазин Рыбок] '
+# EMAIL_TIMEOUT = 30
+
+# Верификация email
+EMAIL_BACKEND = 'django_resend.EmailBackend'
+RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@fishshop.resend.dev')
+
 EMAIL_SUBJECT_PREFIX = '[Магазин Рыбок] '
-EMAIL_TIMEOUT = 30
+    
 
 VERIFICATION_CODE_LENGTH = 6
 VERIFICATION_CODE_EXPIRE_MINUTES = 10
