@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Case, When, Value, IntegerField
 from .models import Product
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 
 def product_list(request):
     """Каталог товаров с фильтрацией и сортировкой"""
@@ -49,3 +51,44 @@ def product_detail(request, product_id):
     """Детали товара"""
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'products/detail.html', {'product': product})
+
+
+@require_GET
+def product_context_api(request):
+    """Возвращает актуальные товары для AI-консультанта"""
+    query = request.GET.get('q', '').strip().lower()
+    
+    if query:
+        # Поиск по названию и описанию
+        products = Product.objects.filter(
+            is_secret=False,
+            stock__gt=0
+        ).filter(
+            name__icontains=query
+        ) | Product.objects.filter(
+            is_secret=False,
+            stock__gt=0
+        ).filter(
+            description__icontains=query
+        )
+    else:
+        # Если запрос пустой — возвращаем популярные/новинки (например, первые 10)
+        products = Product.objects.filter(is_secret=False, stock__gt=0).order_by('-created_at')[:10]
+    
+    # Ограничиваем выборку, чтобы не перегружать AI
+    products = products[:8]
+    
+    data = []
+    for p in products:
+        data.append({
+            'id': p.id,
+            'name': p.name,
+            'category': p.get_category_display(),
+            'price': p.price,
+            'stock': p.stock,
+            'description': p.description,
+            'min_volume': p.min_volume if p.category == 'fish' else None,
+            'difficulty': p.get_difficulty_display() if p.difficulty else None
+        })
+    
+    return JsonResponse({'products': data})
