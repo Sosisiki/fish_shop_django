@@ -378,54 +378,37 @@ def process_chat_order(request, payload):
 def consultant_chat(request):
     """API endpoint для чата с консультантом (n8n)"""
     try:
-        data = json.loads(request.body)
+        # 🔹 Читаем тело запроса
+        body = request.body.decode('utf-8')
+        data = json.loads(body)
+        
         message = data.get('message', '').strip()
         session_id = data.get('session_id')
         
         if not message:
-            return JsonResponse({
-                'success': False,
-                'message': 'Сообщение не может быть пустым'
-            }, status=400)
+            return JsonResponse({'success': False, 'message': 'Сообщение не может быть пустым'}, status=400)
         
         if not session_id:
             session_id = str(uuid.uuid4())
         
-        user_id = request.user.id if request.user.is_authenticated else None
-        
+        # 🔹 Вызов клиента n8n
         result = n8n_client.send_message(
             message=message,
             session_id=session_id,
             user_id=request.user.id if request.user.is_authenticated else None
         )
         
-        if not result.get('success'):
-            return JsonResponse(result, status=200)
+        # 🔹 Всегда возвращаем валидный JSON, даже если ошибка
+        return JsonResponse(result, status=200)
         
-        ai_response = result.get('message', '')
+    except json.JSONDecodeError as e:
+        logger.error(f"❌ Неверный JSON в запросе: {e}")
+        return JsonResponse({'success': False, 'message': 'Неверный формат запроса'}, status=400)
         
-        # Проверяем, вернул ли AI команду на создание заказа
-        order_payload = extract_json_from_ai(ai_response)
-        if order_payload and order_payload.get('action') == 'create_order':
-            return process_chat_order(request, order_payload)
-        
-        # Обычный текстовый ответ
-        return JsonResponse({
-            'success': True,
-            'message': ai_response,
-            'session_id': session_id
-        })
-        
-    except json.JSONDecodeError:
-        logger.error("❌ Ошибка парсинга JSON в consultant_chat")
-        return JsonResponse({
-            'success': False,
-            'message': 'Неверный формат данных'
-        }, status=400)
     except Exception as e:
         logger.exception(f"💥 Критическая ошибка в consultant_chat: {e}")
-        # 🔹 Возвращаем мягкую ошибку вместо 500
+        # 🔹 Возвращаем валидный JSON вместо 500/502
         return JsonResponse({
-            'success': False, 
+            'success': False,
             'message': '🔧 Сервис временно недоступен. Попробуйте позже.'
         }, status=200)
