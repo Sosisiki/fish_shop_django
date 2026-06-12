@@ -1,18 +1,28 @@
 import logging
-from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+import resend  # ← Официальный пакет Resend
 
 logger = logging.getLogger(__name__)
 
+# Инициализируем клиент один раз при импорте
+resend.api_key = getattr(settings, 'RESEND_API_KEY', '')
+
 
 def send_verification_email(email, code, purpose='register'):
-    """Отправляет письмо с кодом подтверждения через Resend"""
+    """Отправляет письмо с кодом подтверждения через Resend API"""
+    
+    # 🔹 Если ключ не настроен — используем демо-режим
+    if not resend.api_key:
+        logger.warning("⚠️ RESEND_API_KEY не настроен. Демо-режим: код выведен в логи.")
+        logger.info(f"📧 [ДЕМО] Код подтверждения для {email}: {code}")
+        return True
+    
     try:
         # Формируем тему письма
         subject = f"{settings.EMAIL_SUBJECT_PREFIX}{'Подтверждение регистрации' if purpose == 'register' else 'Сброс пароля'}"
         
-        # Текстовая версия письма
+        # Текстовая версия
         text_message = f"""Здравствуйте!
 
 Ваш код подтверждения: {code}
@@ -26,7 +36,7 @@ def send_verification_email(email, code, purpose='register'):
 С уважением,
 Команда «Магазин Рыбок»""".strip()
         
-        # HTML-версия письма (если шаблон есть)
+        # HTML-версия (если шаблон есть)
         html_message = None
         try:
             html_message = render_to_string('accounts/emails/verification.html', {
@@ -37,22 +47,23 @@ def send_verification_email(email, code, purpose='register'):
         except Exception as e:
             logger.warning(f"⚠️ Не удалось загрузить HTML-шаблон: {e}")
         
-        # Отправляем письмо
-        send_mail(
-            subject=subject,
-            message=text_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            html_message=html_message,
-            fail_silently=False,
-        )
+        # 🔹 Отправляем через официальный клиент Resend
+        email_params = {
+            "from": settings.DEFAULT_FROM_EMAIL,  # Например: noreply@fishshop.resend.dev
+            "to": email,
+            "subject": subject,
+            "text": text_message,
+        }
+        if html_message:
+            email_params["html"] = html_message
         
-        logger.info(f"✅ Email с кодом {code} отправлен на {email} (цель: {purpose})")
+        response = resend.Emails.send(email_params)
+        
+        logger.info(f"✅ Email отправлен через Resend: {response.get('id', 'unknown')}")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Ошибка отправки email на {email}: {str(e)}")
-        # В демо-режиме логируем, но не прерываем работу
-        if hasattr(settings, 'EMAIL_BACKEND') and 'console' in settings.EMAIL_BACKEND:
-            logger.info(f"📧 [ДЕМО-РЕЖИМ] Код {code} для {email} выведен в консоль")
+        logger.error(f"❌ Ошибка отправки через Resend: {str(e)}")
+        # В демо-режиме показываем код в логах
+        logger.info(f"📧 [ДЕМО] Код для {email}: {code}")
         return False
