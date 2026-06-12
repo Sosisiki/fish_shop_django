@@ -114,7 +114,7 @@ N8N_WEBHOOK_URL = os.getenv(
     'N8N_WEBHOOK_URL', 
     'https://piebodalunuef.beget.app/webhook/751260db-047d-42c3-a8a5-e6f6fd7da5ff/chat'
 )
-N8N_TIMEOUT = int(os.getenv('N8N_TIMEOUT', '30'))
+N8N_TIMEOUT = int(os.getenv('N8N_TIMEOUT', '20'))
 
 # EMAIL НА СЛУЧАЙ НОРМАЛЬНОГО ХОСТА
 # EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')

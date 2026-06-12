@@ -17,7 +17,6 @@ class N8NConsultantClient:
 
     @property
     def timeout(self):
-        # 🔹 25 секунд — чтобы уложиться в лимит Render (30 сек)
         return getattr(settings, 'N8N_TIMEOUT', 20)
 
     def send_message(self, message: str, session_id: str, user_id: Optional[int] = None) -> Dict:
@@ -44,7 +43,6 @@ class N8NConsultantClient:
             )
             response.raise_for_status()
 
-            # 🔹 Безопасный парсинг ответа
             try:
                 result = response.json()
             except ValueError:
@@ -67,26 +65,17 @@ class N8NConsultantClient:
 
         except requests.exceptions.Timeout:
             logger.error(f"⏳ Timeout ({self.timeout}s) при запросе к n8n")
-            return self._fallback("Консультант думает слишком долго. Попробуйте ещё раз.")
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"❌ HTTP ошибка от n8n: {e.response.status_code}")
-            return self._fallback("Сервис консультанта временно недоступен")
+            return self._fallback("Консультант обрабатывает запрос дольше обычного. Попробуйте через минуту.")
 
         except requests.exceptions.ConnectionError:
             logger.error(f"❌ Нет соединения с n8n: {self.webhook_url}")
             return self._fallback("Нет связи с сервисом консультанта")
 
-        except requests.exceptions.RequestException as e:
-            logger.error(f"❌ Ошибка запроса к n8n: {e}")
-            return self._fallback("Ошибка соединения с консультантом")
-
         except Exception as e:
-            logger.exception(f"💥 Непредвиденная ошибка: {e}")
+            logger.exception(f"💥 Ошибка в n8n_client: {e}")
             return self._fallback("Произошла ошибка. Попробуйте позже.")
 
     def _fallback(self, reason: str) -> Dict:
-        # 🔹 Всегда возвращаем валидный JSON-ответ
         return {
             'success': False,
             'message': f'🐠 {reason}',
