@@ -18,7 +18,7 @@ class N8NConsultantClient:
     @property
     def timeout(self):
         # 🔹 25 секунд — чтобы уложиться в лимит Render (30 сек)
-        return getattr(settings, 'N8N_TIMEOUT', 25)
+        return getattr(settings, 'N8N_TIMEOUT', 20)
 
     def send_message(self, message: str, session_id: str, user_id: Optional[int] = None) -> Dict:
         if not self.webhook_url:
