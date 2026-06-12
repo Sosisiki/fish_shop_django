@@ -134,7 +134,8 @@ RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@fishshop.resend.dev')
 
 EMAIL_SUBJECT_PREFIX = '[Магазин Рыбок] '
-    
+EMAIL_TIMEOUT = 10  # секунды
+
 
 VERIFICATION_CODE_LENGTH = 6
 VERIFICATION_CODE_EXPIRE_MINUTES = 10

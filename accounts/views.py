@@ -12,6 +12,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def register(request):
     """Регистрация: email → код на почту → подтверждение → активация"""
     if request.user.is_authenticated:
@@ -20,22 +21,26 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.is_active = False  # 🔹 Блокируем до верификации
+            user.save()
             
             # Генерируем и отправляем код
             code_obj = VerificationCode.generate(user.email, purpose='register')
             
-            try:
-                send_verification_email(user.email, code_obj.code, purpose='register')
+            # 🔹 Отправка через Resend (HTTP API) или консоль в демо-режиме
+            email_sent = send_verification_email(user.email, code_obj.code, purpose='register')
+            
+            if email_sent:
                 messages.success(request, f'✅ Код подтверждения отправлен на {user.email}')
-            except Exception as e:
-                logger.error(f"Failed to send verification email: {e}")
-                if settings.DEBUG:
-                    messages.info(request, f'🔧 Демо-режим: код {code_obj.code} (в консоли сервера)')
+            else:
+                # В демо-режиме показываем код в сообщении
+                if getattr(settings, 'DEBUG', False) or 'console' in getattr(settings, 'EMAIL_BACKEND', ''):
+                    messages.info(request, f'📧 [ДЕМО] Код подтверждения: {code_obj.code}')
                     messages.success(request, 'Код показан выше (демо-режим)')
                 else:
                     messages.error(request, '❌ Не удалось отправить письмо. Попробуйте позже.')
-                    user.delete()
+                    user.delete()  # Удаляем пользователя, если письмо не ушло
                     return redirect('accounts:register')
             
             # Сохраняем в сессии для проверки
@@ -103,7 +108,7 @@ def verify_email(request):
                     request.session.pop('verify_purpose', None)
                     
                     messages.success(request, f'✅ Email подтверждён! Добро пожаловать, {user.username}!')
-                    return redirect('products:catalog')  # 🔹 ИСПРАВЛЕНО
+                    return redirect('products:catalog')
                     
                 elif purpose == 'password_reset':
                     # Переходим к установке нового пароля
@@ -117,12 +122,14 @@ def verify_email(request):
     # Повторная отправка кода
     if 'resend' in request.GET:
         code_obj = VerificationCode.generate(email, purpose=purpose)
-        try:
-            send_verification_email(email, code_obj.code, purpose=purpose)
+        email_sent = send_verification_email(email, code_obj.code, purpose=purpose)
+        
+        if email_sent:
             messages.success(request, '✅ Новый код отправлен!')
-        except:
-            if settings.DEBUG:
-                messages.info(request, f'🔧 Демо: код {code_obj.code}')
+        else:
+            if getattr(settings, 'DEBUG', False) or 'console' in getattr(settings, 'EMAIL_BACKEND', ''):
+                messages.info(request, f'📧 [ДЕМО] Код: {code_obj.code}')
+        
         request.session['verify_code_id'] = code_obj.id
         return redirect('accounts:verify_email')
 
@@ -136,7 +143,7 @@ def verify_email(request):
 def password_reset_request(request):
     """Запрос на сброс пароля: ввод email → код на почту"""
     if request.user.is_authenticated:
-        return redirect('products:catalog')  #  ИСПРАВЛЕНО
+        return redirect('products:catalog')
     
     if request.method == 'POST':
         form = PasswordResetRequestForm(request.POST)
@@ -146,13 +153,14 @@ def password_reset_request(request):
             # Генерируем код
             code_obj = VerificationCode.generate(email, purpose='password_reset')
             
-            try:
-                send_verification_email(email, code_obj.code, purpose='password_reset')
+            # 🔹 Отправка через Resend или консоль
+            email_sent = send_verification_email(email, code_obj.code, purpose='password_reset')
+            
+            if email_sent:
                 messages.success(request, f'✅ Код отправлен на {email}')
-            except Exception as e:
-                logger.error(f"Failed to send reset email: {e}")
-                if settings.DEBUG:
-                    messages.info(request, f' Демо: код {code_obj.code}')
+            else:
+                if getattr(settings, 'DEBUG', False) or 'console' in getattr(settings, 'EMAIL_BACKEND', ''):
+                    messages.info(request, f'📧 [ДЕМО] Код: {code_obj.code}')
                     messages.success(request, 'Код показан выше (демо-режим)')
                 else:
                     messages.error(request, '❌ Не удалось отправить письмо.')
@@ -212,11 +220,12 @@ def resend_verification(request):
     email = request.user.email
     code_obj = VerificationCode.generate(email, purpose='register')
     
-    try:
-        send_verification_email(email, code_obj.code, purpose='register')
+    email_sent = send_verification_email(email, code_obj.code, purpose='register')
+    
+    if email_sent:
         messages.success(request, '✅ Код отправлен повторно!')
-    except:
-        if settings.DEBUG:
-            messages.info(request, f'🔧 Демо: код {code_obj.code}')
+    else:
+        if getattr(settings, 'DEBUG', False) or 'console' in getattr(settings, 'EMAIL_BACKEND', ''):
+            messages.info(request, f'📧 [ДЕМО] Код: {code_obj.code}')
     
     return redirect('accounts:verify_email')
