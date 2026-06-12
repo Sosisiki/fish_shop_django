@@ -396,11 +396,11 @@ def consultant_chat(request):
         result = n8n_client.send_message(
             message=message,
             session_id=session_id,
-            user_id=user_id
+            user_id=request.user.id if request.user.is_authenticated else None
         )
         
         if not result.get('success'):
-            return JsonResponse(result, status=500)
+            return JsonResponse(result, status=200)
         
         ai_response = result.get('message', '')
         
@@ -423,8 +423,9 @@ def consultant_chat(request):
             'message': 'Неверный формат данных'
         }, status=400)
     except Exception as e:
-        logger.exception(f"❌ Ошибка в consultant_chat: {e}")
+        logger.exception(f"💥 Критическая ошибка в consultant_chat: {e}")
+        # 🔹 Возвращаем мягкую ошибку вместо 500
         return JsonResponse({
-            'success': False,
-            'message': 'Внутренняя ошибка сервера'
-        }, status=500)
+            'success': False, 
+            'message': '🔧 Сервис временно недоступен. Попробуйте позже.'
+        }, status=200)
