@@ -131,7 +131,7 @@ N8N_TIMEOUT = int(os.getenv('N8N_TIMEOUT', '20'))
 # Верификация email
 EMAIL_BACKEND = 'django_resend.EmailBackend'
 RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@fishshop.resend.dev')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@resend.dev')
 
 EMAIL_SUBJECT_PREFIX = '[Магазин Рыбок] '
 EMAIL_TIMEOUT = 10  # секунды

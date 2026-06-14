@@ -1,0 +1,602 @@
+[
+  {
+    "id": 96,
+    "name": "LED-светильник Nicrew Classic",
+    "category": "🔧 Аксессуары",
+    "price": 1200,
+    "stock": 25,
+    "desc": "Светодиодная лампа с синим и белым спектром.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 106,
+    "name": "Автоматическая кормушка",
+    "category": "🔧 Аксессуары",
+    "price": 2400,
+    "stock": 15,
+    "desc": "Программируемая подача корма 1-4 раза в день.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 105,
+    "name": "Грот керамический 'Пещера'",
+    "category": "🔧 Аксессуары",
+    "price": 890,
+    "stock": 25,
+    "desc": "Убежище для цихлид и сомов, безопасно для рыб.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 97,
+    "name": "Грунт Tetra ActiveSubstrate 5кг",
+    "category": "🔧 Аксессуары",
+    "price": 950,
+    "stock": 20,
+    "desc": "Питательный субстрат для корней растений.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 98,
+    "name": "Декорация Коряга Натуральная",
+    "category": "🔧 Аксессуары",
+    "price": 1500,
+    "stock": 15,
+    "desc": "Обработанная коряга для укрытий и биофильтрации.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 94,
+    "name": "Компрессор Hailea ACO-009",
+    "category": "🔧 Аксессуары",
+    "price": 650,
+    "stock": 35,
+    "desc": "Тихий воздушный компрессор с распылителем.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 104,
+    "name": "Крышка с LED подсветкой 60см",
+    "category": "🔧 Аксессуары",
+    "price": 1800,
+    "stock": 20,
+    "desc": "Пластиковая крышка со встроенными диодами.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 103,
+    "name": "Распылитель воздуха керамический",
+    "category": "🔧 Аксессуары",
+    "price": 280,
+    "stock": 35,
+    "desc": "Создаёт мелкую воздушную завесу для аэрации.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 100,
+    "name": "Сачок нейлоновый 15см",
+    "category": "🔧 Аксессуары",
+    "price": 190,
+    "stock": 60,
+    "desc": "Мягкий сачок для безопасного отлова рыб.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 99,
+    "name": "Сифон для грунта Aquael",
+    "category": "🔧 Аксессуары",
+    "price": 480,
+    "stock": 45,
+    "desc": "Шланг с насадкой для чистки дна без слива воды.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 95,
+    "name": "Терморегулятор Xilong 50Вт",
+    "category": "🔧 Аксессуары",
+    "price": 720,
+    "stock": 30,
+    "desc": "Автоматический подогрев воды с точностью ±1°С.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 101,
+    "name": "Тест воды Tetra 6-в-1",
+    "category": "🔧 Аксессуары",
+    "price": 550,
+    "stock": 30,
+    "desc": "Полоски для проверки pH, GH, KH, NO2, NO3, Cl2.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 107,
+    "name": "УФ-стерилизатор AquaPro 9Вт",
+    "category": "🔧 Аксессуары",
+    "price": 3100,
+    "stock": 12,
+    "desc": "Уничтожает водоросли и бактерии в воде.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 93,
+    "name": "Фильтр Tetra TetraTec 300",
+    "category": "🔧 Аксессуары",
+    "price": 850,
+    "stock": 40,
+    "desc": "Внутренний фильтр для аквариумов до 60л.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 102,
+    "name": "Фон самоклеящийся 3D",
+    "category": "🔧 Аксессуары",
+    "price": 320,
+    "stock": 40,
+    "desc": "Имитация камня или растений для задней стенки.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 83,
+    "name": "AquaEl Glossy 40л",
+    "category": "🐟 Аквариумы",
+    "price": 3900,
+    "stock": 14,
+    "desc": "Бескаркасный аквариум, минималистичный дизайн.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 88,
+    "name": "AquaOptima 25л",
+    "category": "🐟 Аквариумы",
+    "price": 2100,
+    "stock": 0,
+    "desc": "Стартовый набор для гуппи и неонов с грунтом.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 85,
+    "name": "BiOrb Life 30л",
+    "category": "🐟 Аквариумы",
+    "price": 11000,
+    "stock": 0,
+    "desc": "Сферический аквариум с нижним фильтром и LED.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 89,
+    "name": "Dennerle Nano 10л",
+    "category": "🐟 Аквариумы",
+    "price": 3500,
+    "stock": 18,
+    "desc": "Креветочный аквариум с растениями в комплекте.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 82,
+    "name": "Dennerle Scapers 30л",
+    "category": "🐟 Аквариумы",
+    "price": 4200,
+    "stock": 12,
+    "desc": "Аквариум для акваскейпинга, сверхпрозрачное стекло.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 84,
+    "name": "Ferplast Club 70л",
+    "category": "🐟 Аквариумы",
+    "price": 7200,
+    "stock": 9,
+    "desc": "Итальянский аквариум с современной крышкой.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 90,
+    "name": "Ferplast Dubai 100л",
+    "category": "🐟 Аквариумы",
+    "price": 10500,
+    "stock": 6,
+    "desc": "Просторный аквариум для крупных цихлид.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 91,
+    "name": "Juwel Lido 120л",
+    "category": "🐟 Аквариумы",
+    "price": 13200,
+    "stock": 5,
+    "desc": "Стильный аквариум с изогнутым стеклом.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 81,
+    "name": "Juwel Rio 125л",
+    "category": "🐟 Аквариумы",
+    "price": 14500,
+    "stock": 5,
+    "desc": "Немецкий аквариум с биологической фильтрацией.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 87,
+    "name": "Juwel Vision 180л",
+    "category": "🐟 Аквариумы",
+    "price": 18500,
+    "stock": 4,
+    "desc": "Высокий аквариум с панорамным обзором.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 78,
+    "name": "Nano Cube 20л",
+    "category": "🐟 Аквариумы",
+    "price": 2800,
+    "stock": 15,
+    "desc": "Компактный кубический аквариум с LED подсветкой.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 79,
+    "name": "Panorama 50л",
+    "category": "🐟 Аквариумы",
+    "price": 5500,
+    "stock": 10,
+    "desc": "Панорамное стекло, встроенный фильтр и компрессор.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 92,
+    "name": "Tetra AquaArt 30л",
+    "category": "🐟 Аквариумы",
+    "price": 6800,
+    "stock": 10,
+    "desc": "Дизайнерский аквариум с деревянной подставкой.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 80,
+    "name": "Tetra AquaArt 60л",
+    "category": "🐟 Аквариумы",
+    "price": 8900,
+    "stock": 8,
+    "desc": "Готовый комплект с тумбой и освещением.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 86,
+    "name": "Tetra Clear 80л",
+    "category": "🐟 Аквариумы",
+    "price": 9800,
+    "stock": 7,
+    "desc": "Ультрапрозрачное стекло, без силиконовых швов.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 73,
+    "name": "Акара Голубая",
+    "category": "🐠 Рыбки",
+    "price": 750,
+    "stock": 10,
+    "desc": "Крупная цихлида, территориальная, яркая.",
+    "difficulty": "Профи",
+    "min_volume": 120
+  },
+  {
+    "id": 75,
+    "name": "Анциструс Обыкновенный",
+    "category": "🐠 Рыбки",
+    "price": 280,
+    "stock": 25,
+    "desc": "Сом-присоска, поедает налёт на стёклах.",
+    "difficulty": "Новичок",
+    "min_volume": 40
+  },
+  {
+    "id": 24,
+    "name": "Апистограмма Рамирези",
+    "category": "🐠 Рыбки",
+    "price": 590,
+    "stock": 18,
+    "desc": "Карликовая цихлида, яркая и мирная.",
+    "difficulty": "Средний",
+    "min_volume": 40
+  },
+  {
+    "id": 70,
+    "name": "Барбус Суматранский",
+    "category": "🐠 Рыбки",
+    "price": 210,
+    "stock": 20,
+    "desc": "Подвижная стайная, может обкусывать плавники.",
+    "difficulty": "Средний",
+    "min_volume": 30
+  },
+  {
+    "id": 64,
+    "name": "Гуппи Эндлера",
+    "category": "🐠 Рыбки",
+    "price": 150,
+    "stock": 30,
+    "desc": "Яркая живородящая рыбка, идеальна для новичков.",
+    "difficulty": "Новичок",
+    "min_volume": 10
+  },
+  {
+    "id": 68,
+    "name": "Данио Рерио",
+    "category": "🐠 Рыбки",
+    "price": 110,
+    "stock": 50,
+    "desc": "Быстрая стайная рыба, любит течение и прохладную воду.",
+    "difficulty": "Новичок",
+    "min_volume": 15
+  },
+  {
+    "id": 77,
+    "name": "Дискус Красный",
+    "category": "🐠 Рыбки",
+    "price": 2200,
+    "stock": 0,
+    "desc": "Королевская рыба, требует идеальных параметров воды.",
+    "difficulty": "Профи",
+    "min_volume": 150
+  },
+  {
+    "id": 74,
+    "name": "Коридорас Крапчатый",
+    "category": "🐠 Рыбки",
+    "price": 230,
+    "stock": 30,
+    "desc": "Донный сомик, чистит грунт, стайный.",
+    "difficulty": "Новичок",
+    "min_volume": 20
+  },
+  {
+    "id": 72,
+    "name": "Лабео Двухцветный",
+    "category": "🐠 Рыбки",
+    "price": 480,
+    "stock": 15,
+    "desc": "Крупная рыба-санитар, поедает водоросли.",
+    "difficulty": "Средний",
+    "min_volume": 80
+  },
+  {
+    "id": 69,
+    "name": "Меченосец Зелёный",
+    "category": "🐠 Рыбки",
+    "price": 190,
+    "stock": 35,
+    "desc": "Активная живородящая рыба, простая в уходе.",
+    "difficulty": "Новичок",
+    "min_volume": 20
+  },
+  {
+    "id": 76,
+    "name": "Моллинезия Чёрная",
+    "category": "🐠 Рыбки",
+    "price": 240,
+    "stock": 0,
+    "desc": "Живородящая, любит подсоленную воду и растения.",
+    "difficulty": "Новичок",
+    "min_volume": 30
+  },
+  {
+    "id": 65,
+    "name": "Неон Голубой",
+    "category": "🐠 Рыбки",
+    "price": 180,
+    "stock": 45,
+    "desc": "Стайная рыбка с неоновой полосой, любит мягкую воду.",
+    "difficulty": "Новичок",
+    "min_volume": 20
+  },
+  {
+    "id": 67,
+    "name": "Петушок Сиамский",
+    "category": "🐠 Рыбки",
+    "price": 320,
+    "stock": 25,
+    "desc": "Яркий самец с вуалевыми плавниками, дышит воздухом.",
+    "difficulty": "Новичок",
+    "min_volume": 10
+  },
+  {
+    "id": 66,
+    "name": "Скалярия Императорская",
+    "category": "🐠 Рыбки",
+    "price": 550,
+    "stock": 20,
+    "desc": "Элегантная цихлида, требует просторного аквариума.",
+    "difficulty": "Средний",
+    "min_volume": 60
+  },
+  {
+    "id": 71,
+    "name": "Тернеция Чёрная",
+    "category": "🐠 Рыбки",
+    "price": 170,
+    "stock": 40,
+    "desc": "Тёмная мирная рыба, хорошо смотрится в стае.",
+    "difficulty": "Новичок",
+    "min_volume": 20
+  },
+  {
+    "id": 121,
+    "name": "JBL NovoBel 250мл",
+    "category": "🍽 Корма",
+    "price": 340,
+    "stock": 45,
+    "desc": "Базовые хлопья для ежедневного кормления.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 112,
+    "name": "JBL NovoGranoColor 100мл",
+    "category": "🍽 Корма",
+    "price": 520,
+    "stock": 35,
+    "desc": "Корм с водорослью спирулиной для яркости.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 115,
+    "name": "JBL NovoTab 30шт",
+    "category": "🍽 Корма",
+    "price": 480,
+    "stock": 35,
+    "desc": "Таблетки для донных рыб и креветок.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 118,
+    "name": "JBL ProScan Тест + Корм",
+    "category": "🍽 Корма",
+    "price": 1200,
+    "stock": 20,
+    "desc": "Комплект для анализа воды и подбора диеты.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 117,
+    "name": "Sera Crabs Natural 100мл",
+    "category": "🍽 Корма",
+    "price": 420,
+    "stock": 30,
+    "desc": "Специализированный корм для крабов и креветок.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 114,
+    "name": "Sera Flora 100мл",
+    "category": "🍽 Корма",
+    "price": 360,
+    "stock": 40,
+    "desc": "Чипсы на основе водорослей для растительноядных.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 109,
+    "name": "Sera Goldy Gran 100мл",
+    "category": "🍽 Корма",
+    "price": 380,
+    "stock": 45,
+    "desc": "Гранулы для золотых рыбок, не мутят воду.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 120,
+    "name": "Sera Pond Staple 1л",
+    "category": "🍽 Корма",
+    "price": 950,
+    "stock": 15,
+    "desc": "Плавающие гранулы для прудовых рыб.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 111,
+    "name": "Sera Vipagran 250мл",
+    "category": "🍽 Корма",
+    "price": 890,
+    "stock": 25,
+    "desc": "Гранулы для крупных цихлид и хищников.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 122,
+    "name": "Tetra FreshDelica Мотыль",
+    "category": "🍽 Корма",
+    "price": 280,
+    "stock": 50,
+    "desc": "Натуральный мотыль в геле, без заморозки.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 113,
+    "name": "Tetra Phyll 250мл",
+    "category": "🍽 Корма",
+    "price": 410,
+    "stock": 30,
+    "desc": "Растительные хлопья для травоядных и сомов.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 119,
+    "name": "Tetra Rubin 100мл",
+    "category": "🍽 Корма",
+    "price": 440,
+    "stock": 35,
+    "desc": "Корм с каротиноидами для усиления красного цвета.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 116,
+    "name": "Tetra WaferMix 100мл",
+    "category": "🍽 Корма",
+    "price": 390,
+    "stock": 40,
+    "desc": "Микс из водорослей для сомов и улиток.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 108,
+    "name": "TetraMin Хлопья 100мл",
+    "category": "🍽 Корма",
+    "price": 320,
+    "stock": 50,
+    "desc": "Основной корм для всех тропических рыб.",
+    "difficulty": null,
+    "min_volume": null
+  },
+  {
+    "id": 110,
+    "name": "TetraPro Colour 100мл",
+    "category": "🍽 Корма",
+    "price": 450,
+    "stock": 40,
+    "desc": "Концентрат с натуральными усилителями окраса.",
+    "difficulty": null,
+    "min_volume": null
+  }
+]
