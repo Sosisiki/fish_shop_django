@@ -10,6 +10,27 @@
                 <small class="opacity-75">Создайте аккаунт для покупок</small>
             </div>
             <div class="card-body p-4">
+                
+                {# ✅ БЛОК: Показ кода после успешной регистрации #}
+                {% if verification_code %}
+                <div class="alert alert-success text-center mb-4 border-success">
+                    <h5 class="fw-bold mb-2">✅ Регистрация начата!</h5>
+                    <p class="mb-3">Ваш код подтверждения:</p>
+                    <div class="display-4 fw-bold text-primary mb-3" style="letter-spacing: 12px;">
+                        {{ verification_code }}
+                    </div>
+                    <p class="small text-muted mb-3">
+                        Скопируйте этот код и введите на следующей странице
+                    </p>
+                    <a href="{% url 'accounts:verify_email' %}" class="btn btn-success w-100">
+                        Перейти к подтверждению →
+                    </a>
+                </div>
+                <hr class="my-4">
+                {% endif %}
+                
+                {# ✅ БЛОК: Форма регистрации (показывается, если нет кода) #}
+                {% if not verification_code %}
                 <form method="POST" novalidate>
                     {% csrf_token %}
                     
@@ -23,7 +44,9 @@
                         {{ form.email.label_tag }}
                         {{ form.email }}
                         {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
-                        <small class="text-muted">На этот email придёт код подтверждения</small>
+                        <small class="text-muted d-block mt-1">
+                            🔹 Разрешены только: mail.ru, yandex.ru, bk.ru, inbox.ru, list.ru, rambler.ru, proton.me
+                        </small>
                     </div>
                     
                     <div class="mb-3">
@@ -49,6 +72,8 @@
                     <p class="mb-2 text-muted small">Уже есть аккаунт?</p>
                     <a href="{% url 'accounts:login' %}" class="text-decoration-none">Войти здесь</a>
                 </div>
+                {% endif %}
+                
             </div>
         </div>
     </div>

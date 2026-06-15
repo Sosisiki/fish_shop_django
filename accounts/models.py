@@ -59,11 +59,7 @@ class VerificationCode(models.Model):
         # Аннулируем все неиспользованные коды для этого email и назначения
         cls.objects.filter(email=email, purpose=purpose, is_used=False).update(is_used=True)
         
-        # 🔹 Генерируем случайный 6-значный код (с сохранением ведущих нулей)
-        # Вариант 1: через random.choices (гарантированно 6 символов)
-        # code = ''.join(random.choices(string.digits, k=7))
-        
-        # Вариант 2 (альтернатива): через randint + zfill для ведущих нулей
+        # Генерируем случайный 6-значный код (с сохранением ведущих нулей)
         code = str(random.randint(0, 999999)).zfill(6)
         
         return cls.objects.create(email=email, code=code, purpose=purpose)

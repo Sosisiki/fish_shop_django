@@ -3,6 +3,13 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPa
 from django.contrib.auth.models import User
 from .models import Profile
 
+# ✅ Список разрешённых российских доменов
+RUSSIAN_EMAIL_DOMAINS = [
+    'mail.ru', 'yandex.ru', 'bk.ru', 'inbox.ru', 
+    'list.ru', 'rambler.ru', 'proton.me', 'protonmail.com'
+]
+
+
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
         label="Email",
@@ -11,7 +18,8 @@ class RegisterForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'example@mail.ru',
             'autocomplete': 'email'
-        })
+        }),
+        help_text="Разрешены только российские почтовые сервисы: mail.ru, yandex.ru, bk.ru, inbox.ru, list.ru, rambler.ru, proton.me"
     )
 
     class Meta:
@@ -38,6 +46,14 @@ class RegisterForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '').lower().strip()
+        
+        # ✅ Проверка: только российские домены
+        domain = email.split('@')[-1] if '@' in email else ''
+        if domain not in RUSSIAN_EMAIL_DOMAINS:
+            raise forms.ValidationError(
+                f"Разрешены только российские почтовые сервисы: {', '.join(RUSSIAN_EMAIL_DOMAINS)}"
+            )
+        
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Пользователь с таким email уже зарегистрирован")
         return email
@@ -45,7 +61,7 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email'].lower()
-        user.is_active = False  # Не активен до подтверждения email
+        user.is_active = False  # Не активен до подтверждения
         if commit:
             user.save()
             profile = user.profile
@@ -56,7 +72,7 @@ class RegisterForm(UserCreationForm):
 
 class EmailVerificationForm(forms.Form):
     code = forms.CharField(
-        label="Код из письма",
+        label="Код подтверждения",
         max_length=6,
         widget=forms.TextInput(attrs={
             'class': 'form-control form-control-lg text-center',
@@ -85,20 +101,27 @@ class PasswordResetRequestForm(forms.Form):
             'placeholder': 'example@mail.ru',
             'autocomplete': 'email'
         }),
-        help_text="Введите email, указанный при регистрации"
+        help_text="Введите email, указанный при регистрации (только российские домены)"
     )
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '').lower().strip()
+        
+        # ✅ Проверка домена и для сброса пароля
+        domain = email.split('@')[-1] if '@' in email else ''
+        if domain not in RUSSIAN_EMAIL_DOMAINS:
+            raise forms.ValidationError(
+                f"Разрешены только российские почтовые сервисы: {', '.join(RUSSIAN_EMAIL_DOMAINS)}"
+            )
+        
         if not User.objects.filter(email=email).exists():
-            # Не показываем, существует ли пользователь (безопасность)
-            raise forms.ValidationError("Если такой аккаунт существует, код будет отправлен")
+            raise forms.ValidationError("Если такой аккаунт существует, код будет показан")
         return email
 
 
 class PasswordResetConfirmForm(forms.Form):
     code = forms.CharField(
-        label="Код из письма",
+        label="Код подтверждения",
         max_length=6,
         widget=forms.TextInput(attrs={
             'class': 'form-control form-control-lg text-center',
