@@ -17,13 +17,12 @@
         <!-- 🔹 ИЗОБРАЖЕНИЕ -->
         <div class="col-lg-6">
             <div class="card shadow-sm border-0">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 400px; object-fit: cover;">
-                {% else %}
-                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 400px;">
-                        <i class="bi bi-box text-white" style="font-size: 6rem;"></i>
-                    </div>
-                {% endif %}
+                <img src="{{ product.get_image_url }}" 
+                     alt="{{ product.name }}" 
+                     class="card-img-top" 
+                     style="height: 400px; object-fit: cover; background: #f8f9fa;"
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/400x300/95A5A6/FFFFFF?text=FishShop'">
             </div>
         </div>
 
