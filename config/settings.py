@@ -40,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'accounts.middleware.EmailVerificationMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -88,6 +89,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False  # Чтобы не падало при отсутствии .map файлов
 
 # MEDIA FILES
 MEDIA_URL = '/media/'
