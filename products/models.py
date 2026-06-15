@@ -15,8 +15,8 @@ def transliterate_cyrillic(text):
     return ''.join(converter.get(c, c) for c in text)
 
 
-def get_product_placeholder_svg(product_id, name, category, price):
-    """Генерирует inline SVG-заглушку как data: URI (без внешних запросов)"""
+def get_product_placeholder(product_id, name, category, price):
+    """Генерирует уникальную заглушку для товара"""
     
     # 🔹 Цвета по категориям
     category_colors = {
@@ -28,23 +28,22 @@ def get_product_placeholder_svg(product_id, name, category, price):
     
     bg_color, emoji = category_colors.get(category, ('95A5A6', '📦'))
     
-    # 🔹 Короткое название (латиница, макс. 12 символов)
+    # 🔹 Короткое название для изображения (макс. 15 символов)
     short_name = transliterate_cyrillic(name)
-    short_name = re.sub(r'[^a-z0-9\-]', '', short_name)[:12].strip('-')
+    short_name = re.sub(r'[^a-z0-9\-]', '', short_name)[:15].strip('-')
     if not short_name:
-        short_name = f'#{product_id}'
+        short_name = f'item{product_id}'
     
-    # 🔹 Цена
-    price_tag = f'{int(price)}₽'
+    # 🔹 Цена в углу (последние 2-3 цифры для уникальности)
+    price_tag = str(price)[-3:] if price >= 100 else str(price)
     
-    # 🔹 Формируем SVG
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
-  <rect width="100%" height="100%" fill="#{bg_color}"/>
-  <text x="50%" y="45%" font-family="Arial, sans-serif" font-size="48" fill="white" text-anchor="middle" dominant-baseline="middle">{emoji}</text>
-  <text x="50%" y="65%" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle">{short_name}</text>
-  <text x="50%" y="85%" font-family="Arial, sans-serif" font-size="14" fill="rgba(255,255,255,0.9)" text-anchor="middle">{price_tag}</text>
-</svg>'''
+    # 🔹 Формируем URL заглушки
+    text = f"{emoji}+{short_name}+{price_tag}₽"
+    text = text.replace(' ', '+')[:45]
     
+    return f"https://via.placeholder.com/400x300/{bg_color}/FFFFFF?text={text}"
+
+
 class Product(models.Model):
     CATEGORY_CHOICES = [
         ('fish', '🐠 Рыбки'),
