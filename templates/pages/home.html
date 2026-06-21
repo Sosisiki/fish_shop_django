@@ -3,6 +3,32 @@
 
 {% block content %}
 <style>
+/* Фон с чешуёй рыбы */
+.scales-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 C30 0, 45 15, 45 30 C45 45, 30 60, 30 60 C30 60, 15 45, 15 30 C15 15, 30 0, 30 0 Z' fill='%230ea5e9' fill-opacity='0.3'/%3E%3Cpath d='M0 30 C0 30, 15 15, 30 15 C45 15, 60 30, 60 30 C60 30, 45 45, 30 45 C15 45, 0 30, 0 30 Z' fill='%230ea5e9' fill-opacity='0.2'/%3E%3C/svg%3E");
+    background-size: 60px 60px;
+    transition: transform 0.3s ease-out;
+    pointer-events: none;
+}
+
+/* Анимация при наведении на секции */
+.content-section {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease-out;
+}
+
+.content-section:hover {
+    transform: scale(1.01);
+}
+
 /* Hero секция с подводным эффектом */
 .hero-underwater {
     position: relative;
@@ -13,6 +39,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
 
 /* Пузырьки воздуха */
@@ -127,12 +154,17 @@
     padding: 1rem;
     margin-bottom: 2rem;
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .demo-notice i {
     color: #d97706;
 }
 </style>
+
+<!-- Фон с чешуёй рыбы -->
+<div class="scales-background" id="scalesBg"></div>
 
 <!-- Уведомление об учебном проекте -->
 <div class="demo-notice">
@@ -180,21 +212,21 @@
 <!-- Features -->
 <div class="row g-4 mb-5">
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm p-4">
+        <div class="card h-100 border-0 shadow-sm p-4 content-section">
             <div class="text-center mb-3"><i class="bi bi-robot fs-1 text-primary"></i></div>
             <h5 class="fw-bold">ИИ-консультант 24/7</h5>
             <p class="text-muted">Нейросеть обучена ихтиологии и аквариумистике. Отвечает на вопросы, подбирает совместимые виды и помогает с выбором товаров.</p>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm p-4">
+        <div class="card h-100 border-0 shadow-sm p-4 content-section">
             <div class="text-center mb-3"><i class="bi bi-shield-check fs-1 text-success"></i></div>
             <h5 class="fw-bold">Безопасная регистрация</h5>
             <p class="text-muted">Обязательная верификация email, защита персональных данных в соответствии с ФЗ-152, прозрачные условия использования.</p>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm p-4">
+        <div class="card h-100 border-0 shadow-sm p-4 content-section">
             <div class="text-center mb-3"><i class="bi bi-geo-alt fs-1 text-info"></i></div>
             <h5 class="fw-bold">Интерактивная карта</h5>
             <p class="text-muted">Демонстрация выбора адреса доставки через Яндекс.Карты с автоматическим геокодированием координат.</p>
@@ -203,7 +235,7 @@
 </div>
 
 <!-- AI CTA -->
-<section class="card border-0 shadow-sm mb-5 bg-gradient" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+<section class="card border-0 shadow-sm mb-5 bg-gradient content-section" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
     <div class="card-body p-5 text-white text-center">
         <h3 class="fw-bold mb-3">Попробуйте ИИ-консультанта</h3>
         <p class="mb-4 opacity-75">Напишите в чат «Подбери рыбок для 50 литров» и получите мгновенную рекомендацию с учётом совместимости и сложности ухода.</p>
@@ -232,4 +264,34 @@
         <small class="text-muted">Российская разработка</small>
     </div>
 </div>
+
+<script>
+// Интерактивная анимация чешуи при движении курсора
+const scalesBg = document.getElementById('scalesBg');
+let mouseX = 0;
+let mouseY = 0;
+let currentX = 0;
+let currentY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+function animateScales() {
+    // Плавное движение к позиции курсора
+    currentX += (mouseX - currentX) * 0.05;
+    currentY += (mouseY - currentY) * 0.05;
+    
+    // Смещение фона в противоположную сторону от курсора
+    const translateX = currentX * -20;
+    const translateY = currentY * -20;
+    
+    scalesBg.style.transform = `translate(${translateX}px, ${translateY}px) scale(1.1)`;
+    
+    requestAnimationFrame(animateScales);
+}
+
+animateScales();
+</script>
 {% endblock %}
