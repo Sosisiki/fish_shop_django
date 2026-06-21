@@ -33,7 +33,6 @@ def register(request):
                 request.session['verify_purpose'] = 'register'
 
                 logger.info(f"✅ Пользователь {user.username} ({user.email}) успешно создан в БД")
-                messages.success(request, f'✅ Регистрация завершена! Ваш код: {code_obj.code}')
                 
                 # Показываем код на той же странице
                 return render(request, 'accounts/register.html', {
@@ -82,7 +81,7 @@ def verify_email(request):
                     id=code_id, email=email, purpose=purpose, is_used=False
                 )
             except VerificationCode.DoesNotExist:
-                messages.error(request, 'Код не найден или уже использован.')
+                messages.error(request, 'Код не найден или уже использован. Запросите новый.')
                 return redirect('accounts:verify_email')
             
             if code_obj.is_valid() and code_obj.code == code_input:
@@ -108,14 +107,15 @@ def verify_email(request):
                     request.session['reset_confirmed'] = True
                     return redirect('accounts:password_reset_confirm')
             else:
-                messages.error(request, '❌ Неверный код или время истекло.')
+                messages.error(request, '❌ Неверный код.')
     else:
         form = EmailVerificationForm()
     
+    # 🔹 Повторная отправка кода (без проверки времени)
     if 'resend' in request.GET:
         code_obj = VerificationCode.generate(email, purpose=purpose)
-        messages.info(request, f'📋 Новый код: {code_obj.code}')
         request.session['verify_code_id'] = code_obj.id
+        messages.success(request, f'📋 Новый код: {code_obj.code}')
         return redirect('accounts:verify_email')
 
     return render(request, 'accounts/verify_email.html', {

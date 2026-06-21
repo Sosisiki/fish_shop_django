@@ -65,11 +65,9 @@ class VerificationCode(models.Model):
         return cls.objects.create(email=email, code=code, purpose=purpose)
 
     def is_valid(self):
-        """Проверяет, действителен ли код (не использован и не истёк)"""
-        from django.conf import settings
-        expire_minutes = getattr(settings, 'VERIFICATION_CODE_EXPIRE_MINUTES', 10)
-        expired = (timezone.now() - self.created_at).total_seconds() > (expire_minutes * 60)
-        return not self.is_used and not expired
+        """Проверяет, действителен ли код (только проверка использования)"""
+        # 🔹 Убрана проверка времени - код действителен пока не использован
+        return not self.is_used
 
 
 class PasswordResetToken(models.Model):

@@ -2,78 +2,273 @@
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-lg border-0">
-            <div class="card-header bg-primary text-white text-center py-3">
-                <h4 class="mb-0 fw-bold">📝 Регистрация</h4>
-                <small class="opacity-75">Создайте аккаунт для покупок</small>
-            </div>
-            <div class="card-body p-4">
-                
-                {# ✅ БЛОК: Показ кода после успешной регистрации #}
-                {% if verification_code %}
-                <div class="alert alert-success text-center mb-4 border-success">
-                    <h5 class="fw-bold mb-2">✅ Регистрация начата!</h5>
-                    <p class="mb-3">Ваш код подтверждения:</p>
-                    <div class="display-4 fw-bold text-primary mb-3" style="letter-spacing: 12px;">
-                        {{ verification_code }}
+<style>
+/* Фон с анимацией */
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 0;
+}
+
+/* Пузырьки */
+.auth-bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float-up 15s infinite;
+}
+
+@keyframes float-up {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Стеклянная карточка */
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: slide-up 0.6s ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Заголовок */
+.auth-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 2rem;
+    text-align: center;
+}
+
+.auth-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Поля ввода */
+.auth-input {
+    border: 2px solid #e0e7ff;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.auth-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+}
+
+/* Кнопка */
+.auth-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.875rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Ссылки */
+.auth-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.auth-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Разделитель */
+.auth-divider {
+    border-top: 2px solid #e0e7ff;
+    margin: 1.5rem 0;
+}
+
+/* Блок с кодом */
+.code-display {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+    50% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
+}
+
+.code-number {
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 12px;
+    margin: 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Подсказка */
+.hint-box {
+    background: #f0f9ff;
+    border-left: 4px solid #0ea5e9;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+</style>
+
+<div class="auth-page">
+    <!-- Пузырьки -->
+    <div class="auth-bubble" style="left: 10%; width: 80px; height: 80px; animation-delay: 0s;"></div>
+    <div class="auth-bubble" style="left: 30%; width: 60px; height: 60px; animation-delay: 3s;"></div>
+    <div class="auth-bubble" style="left: 60%; width: 100px; height: 100px; animation-delay: 6s;"></div>
+    <div class="auth-bubble" style="left: 80%; width: 70px; height: 70px; animation-delay: 9s;"></div>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="auth-card">
+                    
+                    {# ✅ БЛОК: Показ кода после успешной регистрации #}
+                    {% if verification_code %}
+                    <div class="code-display">
+                        <div class="auth-icon">✅</div>
+                        <h3 class="fw-bold mb-2">Регистрация завершена!</h3>
+                        <p class="mb-3 opacity-75">Ваш код подтверждения:</p>
+                        <div class="code-number">{{ verification_code }}</div>
+                        <p class="mb-4 small">
+                            Скопируйте этот код и введите на следующей странице для активации аккаунта
+                        </p>
+                        <a href="{% url 'accounts:verify_email' %}" class="btn btn-light btn-lg w-100 fw-bold">
+                            <i class="bi bi-arrow-right-circle me-2"></i>Перейти к подтверждению
+                        </a>
                     </div>
-                    <p class="small text-muted mb-3">
-                        Скопируйте этот код и введите на следующей странице
-                    </p>
-                    <a href="{% url 'accounts:verify_email' %}" class="btn btn-success w-100">
-                        Перейти к подтверждению →
-                    </a>
+                    {% endif %}
+                    
+                    {# ✅ БЛОК: Форма регистрации #}
+                    {% if not verification_code %}
+                    <div class="auth-header">
+                        <div class="auth-icon">📝</div>
+                        <h3 class="mb-2 fw-bold">Регистрация</h3>
+                        <p class="mb-0 opacity-75">Создайте аккаунт для покупок</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">
+                                    {{ form.username.label }}
+                                </label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle"></i> {{ form.username.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">
+                                    {{ form.email.label }}
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle"></i> {{ form.email.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="hint-box">
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Разрешены только российские почтовые сервисы: mail.ru, yandex.ru, bk.ru, inbox.ru, list.ru, rambler.ru, proton.me
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold">
+                                    {{ form.password1.label }}
+                                </label>
+                                {{ form.password1 }}
+                                {% if form.password1.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle"></i> {{ form.password1.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold">
+                                    {{ form.password2.label }}
+                                </label>
+                                {{ form.password2 }}
+                                {% if form.password2.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle"></i> {{ form.password2.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <button type="submit" class="auth-btn w-100">
+                                <i class="bi bi-person-plus me-2"></i>Зарегистрироваться и получить код
+                            </button>
+                        </form>
+                        
+                        <div class="auth-divider"></div>
+                        
+                        <div class="text-center">
+                            <p class="mb-2 text-muted">Уже есть аккаунт?</p>
+                            <a href="{% url 'accounts:login' %}" class="auth-link">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Войти здесь
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
                 </div>
-                <hr class="my-4">
-                {% endif %}
-                
-                {# ✅ БЛОК: Форма регистрации (показывается, если нет кода) #}
-                {% if not verification_code %}
-                <form method="POST" novalidate>
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        {{ form.username.label_tag }}
-                        {{ form.username }}
-                        {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.email.label_tag }}
-                        {{ form.email }}
-                        {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
-                        <small class="text-muted d-block mt-1">
-                            🔹 Разрешены только: mail.ru, yandex.ru, bk.ru, inbox.ru, list.ru, rambler.ru, proton.me
-                        </small>
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.password1.label_tag }}
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}<div class="text-danger small mt-1">{{ form.password1.errors.0 }}</div>{% endif %}
-                    </div>
-                    
-                    <div class="mb-4">
-                        {{ form.password2.label_tag }}
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}<div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>{% endif %}
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                        Зарегистрироваться и получить код
-                    </button>
-                </form>
-                
-                <hr class="my-4">
-                
-                <div class="text-center">
-                    <p class="mb-2 text-muted small">Уже есть аккаунт?</p>
-                    <a href="{% url 'accounts:login' %}" class="text-decoration-none">Войти здесь</a>
-                </div>
-                {% endif %}
-                
             </div>
         </div>
     </div>

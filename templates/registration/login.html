@@ -1,30 +1,187 @@
 {% extends 'base.html' %}
-
 {% block title %}Вход{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow-lg border-0">
-            <div class="card-header bg-primary text-white text-center py-3">
-                <h4 class="mb-0 fw-bold">🔐 Вход</h4>
-                <small class="opacity-75">Введите свои данные</small>
-            </div>
-            <div class="card-body p-4">
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary w-100 mt-3">
-                        <i class="bi bi-box-arrow-in-right"></i> Войти
-                    </button>
-                </form>
-                <hr>
-                <p class="text-center mb-0">
-                    Нет аккаунта? <a href="{% url 'accounts:register' %}">Зарегистрироваться</a>
-                </p>
-                <p class="text-center mt-2 mb-0">
-                    <a href="{% url 'accounts:password_reset_request' %}">Забыли пароль?</a>
-                </p>
+<style>
+/* Фон с анимацией */
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 0;
+}
+
+/* Пузырьки */
+.auth-bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float-up 15s infinite;
+}
+
+@keyframes float-up {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Стеклянная карточка */
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: slide-up 0.6s ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Заголовок */
+.auth-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 2rem;
+    text-align: center;
+}
+
+.auth-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Поля ввода */
+.auth-input {
+    border: 2px solid #e0e7ff;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.auth-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+}
+
+/* Кнопка */
+.auth-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.875rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Ссылки */
+.auth-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.auth-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Разделитель */
+.auth-divider {
+    border-top: 2px solid #e0e7ff;
+    margin: 1.5rem 0;
+}
+</style>
+
+<div class="auth-page">
+    <!-- Пузырьки -->
+    <div class="auth-bubble" style="left: 10%; width: 80px; height: 80px; animation-delay: 0s;"></div>
+    <div class="auth-bubble" style="left: 30%; width: 60px; height: 60px; animation-delay: 3s;"></div>
+    <div class="auth-bubble" style="left: 60%; width: 100px; height: 100px; animation-delay: 6s;"></div>
+    <div class="auth-bubble" style="left: 80%; width: 70px; height: 70px; animation-delay: 9s;"></div>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-icon">🔐</div>
+                        <h3 class="mb-2 fw-bold">Вход в аккаунт</h3>
+                        <p class="mb-0 opacity-75">Введите свои данные для входа</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            
+                            <button type="submit" class="auth-btn w-100 mt-3">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                            </button>
+                        </form>
+                        
+                        <div class="auth-divider"></div>
+                        
+                        <div class="text-center">
+                            <p class="mb-2 text-muted">Нет аккаунта?</p>
+                            <a href="{% url 'accounts:register' %}" class="auth-link">
+                                <i class="bi bi-person-plus me-1"></i>Зарегистрироваться
+                            </a>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{% url 'accounts:password_reset_request' %}" class="auth-link small">
+                                <i class="bi bi-key me-1"></i>Забыли пароль?
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
