@@ -1,138 +1,235 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Магазин Рыбок – Главная{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    {% load static %}
-    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}🐠 Магазин Рыбок – Главная{% endblock %}
+
+{% block content %}
+<style>
+/* Hero секция с подводным эффектом */
+.hero-underwater {
+    position: relative;
+    background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 50%, #075985 100%);
+    border-radius: 1rem;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Пузырьки воздуха */
+.bubble {
+    position: absolute;
+    bottom: -100px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: bubble-rise linear infinite;
+}
+
+@keyframes bubble-rise {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-600px) translateX(30px);
+        opacity: 0;
+    }
+}
+
+/* Плавающие рыбки */
+.floating-fish {
+    position: absolute;
+    font-size: 3rem;
+    animation: fish-swim linear infinite;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+@keyframes fish-swim {
+    0% {
+        transform: translateX(-100px) translateY(0) scaleX(1);
+    }
+    49% {
+        transform: translateX(calc(100vw + 100px)) translateY(-20px) scaleX(1);
+    }
+    50% {
+        transform: translateX(calc(100vw + 100px)) translateY(-20px) scaleX(-1);
+    }
+    99% {
+        transform: translateX(-100px) translateY(20px) scaleX(-1);
+    }
+    100% {
+        transform: translateX(-100px) translateY(0) scaleX(1);
+    }
+}
+
+.fish-1 { top: 20%; animation-duration: 25s; animation-delay: 0s; }
+.fish-2 { top: 50%; animation-duration: 30s; animation-delay: 5s; font-size: 2.5rem; }
+.fish-3 { top: 70%; animation-duration: 28s; animation-delay: 10s; font-size: 2rem; }
+.fish-4 { top: 35%; animation-duration: 35s; animation-delay: 15s; font-size: 2.8rem; }
+
+/* Световые блики */
+.light-rays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+
+.hero-buttons .btn {
+    margin: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.hero-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Уведомление об учебном проекте */
+.demo-notice {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.demo-notice i {
+    color: #d97706;
+}
+</style>
+
+<!-- Уведомление об учебном проекте -->
+<div class="demo-notice">
+    <i class="bi bi-mortarboard-fill fs-4 me-2"></i>
+    <strong>Внимание:</strong> Это учебный дипломный проект. Реальные заказы не обрабатываются, доставка не осуществляется. Сайт демонстрирует возможности интеграции AI-консультанта в e-commerce.
+</div>
+
+<!-- Hero Section с анимированными рыбками -->
+<section class="hero-underwater mb-5">
+    <!-- Световые блики -->
+    <div class="light-rays"></div>
     
-    <!-- Навигация -->
-    <nav class="site-navbar">
-        <div class="nav-wrapper container">
-            <div class="nav-group nav-left">
-                <a href="{% url 'products:catalog' %}" class="nav-item"><i class="bi bi-grid"></i> Каталог</a>
-                <a href="{% url 'pages:about' %}" class="nav-item"><i class="bi bi-info-circle"></i> О нас</a>
-                <a href="{% url 'pages:support' %}" class="nav-item"><i class="bi bi-headset"></i> Поддержка</a>
-            </div>
-            <a href="{% url 'pages:home' %}" class="nav-brand">
-                <img src="{% static 'images/logo.png' %}" alt="Логотип" class="brand-logo" style="height: 32px; width: auto; vertical-align: middle; margin-right: 8px;">
-                Магазин Рыбок
+    <!-- Пузырьки -->
+    <div class="bubble" style="left: 10%; width: 40px; height: 40px; animation-duration: 8s;"></div>
+    <div class="bubble" style="left: 25%; width: 25px; height: 25px; animation-duration: 6s; animation-delay: 2s;"></div>
+    <div class="bubble" style="left: 45%; width: 35px; height: 35px; animation-duration: 9s; animation-delay: 4s;"></div>
+    <div class="bubble" style="left: 65%; width: 20px; height: 20px; animation-duration: 7s; animation-delay: 1s;"></div>
+    <div class="bubble" style="left: 80%; width: 30px; height: 30px; animation-duration: 10s; animation-delay: 3s;"></div>
+    <div class="bubble" style="left: 90%; width: 28px; height: 28px; animation-duration: 8s; animation-delay: 5s;"></div>
+    
+    <!-- Плавающие рыбки -->
+    <div class="floating-fish fish-1">🐠</div>
+    <div class="floating-fish fish-2">🐟</div>
+    <div class="floating-fish fish-3">🐡</div>
+    <div class="floating-fish fish-4">🐠</div>
+    
+    <!-- Контент -->
+    <div class="hero-content">
+        <h1 class="hero-title">Создайте свой подводный мир</h1>
+        <p class="hero-subtitle">
+            Учебный интернет-магазин аквариумных рыбок с интеграцией ИИ-консультанта. 
+            Подбор совместимых видов, расчёт объёма аквариума и демонстрация оформления заказа.
+        </p>
+        <div class="hero-buttons">
+            <a href="{% url 'products:catalog' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-grid me-2"></i> Перейти в каталог
             </a>
-            <div class="nav-group nav-right">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'orders:order_history' %}" class="nav-item"><i class="bi bi-bag"></i> Заказы</a>
-                    <a href="{% url 'orders:cart' %}" class="nav-item position-relative">
-                        <i class="bi bi-cart"></i> Корзина
-                        <span id="cartBadge" class="badge-count" style="display:none;">0</span>
-                    </a>
-                    {% if user.is_staff %}<a href="/admin/" class="nav-item"><i class="bi bi-gear"></i> Админка</a>{% endif %}
-                    <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-item btn-logout"><i class="bi bi-box-arrow-right"></i> Выйти</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'accounts:login' %}" class="nav-item"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
-                    <a href="{% url 'accounts:register' %}" class="nav-item"><i class="bi bi-person-plus"></i> Регистрация</a>
-                {% endif %}
-            </div>
-            <div class="nav-fishing-rod" aria-hidden="true">
-                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5,55 Q25,5 50,15" stroke="#0ea5e9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <line x1="50" y1="15" x2="46" y2="42" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,2"/>
-                    <circle cx="46" cy="44" r="3" fill="#06b6d4" opacity="0.8"/>
-                </svg>
-            </div>
-            <button class="mobile-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu"><i class="bi bi-list"></i></button>
+            <a href="{% url 'pages:about' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-info-circle me-2"></i> О проекте
+            </a>
         </div>
-        <div class="collapse mobile-menu" id="mobileMenu">
-            <div class="container py-3">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'orders:cart' %}" class="nav-item d-block mb-2"><i class="bi bi-cart"></i> Корзина</a>
-                    <a href="{% url 'orders:order_history' %}" class="nav-item d-block mb-2"><i class="bi bi-bag"></i> Мои заказы</a>
-                    {% if user.is_staff %}<a href="/admin/" class="nav-item d-block mb-2"><i class="bi bi-gear"></i> Админка</a>{% endif %}
-                    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit" class="nav-item btn-logout w-100 text-start"><i class="bi bi-box-arrow-right"></i> Выйти</button></form>
-                {% else %}
-                    <a href="{% url 'accounts:login' %}" class="nav-item d-block mb-2"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
-                    <a href="{% url 'accounts:register' %}" class="nav-item d-block mb-2"><i class="bi bi-person-plus"></i> Регистрация</a>
-                {% endif %}
-                <a href="{% url 'products:catalog' %}" class="nav-item d-block"><i class="bi bi-grid"></i> Каталог</a>
-                <a href="{% url 'pages:about' %}" class="nav-item d-block"><i class="bi bi-info-circle"></i> О нас</a>
-                <a href="{% url 'pages:support' %}" class="nav-item d-block"><i class="bi bi-headset"></i> Поддержка</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Сообщения -->
-    <div class="container mt-3">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
     </div>
+</section>
 
-    <!-- Основной контент -->
-    <main class="main-content">
-        <div class="container">
-            {% block content %}{% endblock %}
+<!-- Features -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="text-center mb-3"><i class="bi bi-robot fs-1 text-primary"></i></div>
+            <h5 class="fw-bold">ИИ-консультант 24/7</h5>
+            <p class="text-muted">Нейросеть обучена ихтиологии и аквариумистике. Отвечает на вопросы, подбирает совместимые виды и помогает с выбором товаров.</p>
         </div>
-    </main>
-
-    <!-- Футер -->
-    <footer class="site-footer">
-        <div class="footer-wave">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="wave-path"></path>
-            </svg>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="text-center mb-3"><i class="bi bi-shield-check fs-1 text-success"></i></div>
+            <h5 class="fw-bold">Безопасная регистрация</h5>
+            <p class="text-muted">Обязательная верификация email, защита персональных данных в соответствии с ФЗ-152, прозрачные условия использования.</p>
         </div>
-        <div class="container py-4">
-            <div class="text-center mb-3">
-                <a href="{% url 'pages:home' %}" class="footer-home-link">
-                    <img src="{% static 'images/logo.png' %}" alt="Логотип" class="brand-logo" style="height: 40px; width: auto; vertical-align: middle; margin-right: 8px;">
-                    <span>Магазин Рыбок</span>
-                </a>
-            </div>
-            <div class="row justify-content-between align-items-center">
-                <div class="col-md-4 text-md-start mb-3 mb-md-0">
-                    <div class="footer-links-group">
-                        <a href="{% url 'products:catalog' %}" class="footer-link"><i class="bi bi-grid"></i> Каталог</a>
-                        <a href="{% url 'pages:about' %}" class="footer-link"><i class="bi bi-info-circle"></i> О нас</a>
-                        <a href="{% url 'pages:support' %}" class="footer-link"><i class="bi bi-headset"></i> Поддержка</a>
-                    </div>
-                </div>
-                <div class="col-md-4 text-md-end mb-3 mb-md-0">
-                    <div class="footer-links-group">
-                        <a href="{% url 'pages:delivery' %}" class="footer-link"><i class="bi bi-truck"></i> Доставка</a>
-                        <a href="{% url 'pages:returns' %}" class="footer-link"><i class="bi bi-arrow-return-left"></i> Возврат</a>
-                        <a href="{% url 'pages:guarantee' %}" class="footer-link"><i class="bi bi-shield-check"></i> Гарантия</a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-3 pt-3 border-top border-light">
-                <p class="mb-0 text-light opacity-75 small">🐠 Магазин Рыбок | Учебный дипломный проект 2026</p>
-                <p class="mb-0 text-light opacity-50 small mt-1">Демонстрационная версия. Реальные заказы не обрабатываются.</p>
-            </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="text-center mb-3"><i class="bi bi-geo-alt fs-1 text-info"></i></div>
+            <h5 class="fw-bold">Интерактивная карта</h5>
+            <p class="text-muted">Демонстрация выбора адреса доставки через Яндекс.Карты с автоматическим геокодированием координат.</p>
         </div>
-        <div class="footer-fish fish-1">🐠</div>
-        <div class="footer-fish fish-2">🐟</div>
-        <div class="footer-fish fish-3">🐡</div>
-    </footer>
+    </div>
+</div>
 
-    <!-- Кнопка наверх -->
-    <button id="backToTop" title="Вернуться наверх" class="btn-floating"><i class="bi bi-chevron-up"></i></button>
+<!-- AI CTA -->
+<section class="card border-0 shadow-sm mb-5 bg-gradient" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+    <div class="card-body p-5 text-white text-center">
+        <h3 class="fw-bold mb-3">Попробуйте ИИ-консультанта</h3>
+        <p class="mb-4 opacity-75">Напишите в чат «Подбери рыбок для 50 литров» и получите мгновенную рекомендацию с учётом совместимости и сложности ухода.</p>
+        <div class="d-inline-block bg-white text-dark rounded-pill px-4 py-2 fw-medium">
+            <i class="bi bi-chat-dots me-2"></i> Виджет доступен в правом нижнем углу ↘️
+        </div>
+    </div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-    {% block extra_js %}{% endblock %}
-    {% include 'includes/chat_widget.html' %}
-</body>
-</html>
+<!-- Trust -->
+<div class="row text-center g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">50+</h2>
+        <small class="text-muted">Видов в каталоге</small>
+    </div>
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">24/7</h2>
+        <small class="text-muted">Работа ИИ</small>
+    </div>
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">100%</h2>
+        <small class="text-muted">Безопасные данные</small>
+    </div>
+    <div class="col-6 col-md-3">
+        <h2 class="fw-bold text-primary mb-1">🇷🇺</h2>
+        <small class="text-muted">Российская разработка</small>
+    </div>
+</div>
+{% endblock %}
